@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 session_start();
 require_once __DIR__ . "/../config/db.php";
 
@@ -13,24 +15,24 @@ $password = $_POST["password"] ?? "";
 $confirm = $_POST["confirm_password"] ?? "";
 
 if ($name === "" || $email === "" || $password === "" || $confirm === "") {
-  $_SESSION["flash_error"] = "Fill out all fields.";
+  $_SESSION["flash_error"] = "Please fill out all fields.";
   header("Location: /index.php?mode=register");
   exit;
 }
 
 if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-  $_SESSION["flash_error"] = "Enter a valid email.";
+  $_SESSION["flash_error"] = "Please enter a valid email.";
   header("Location: /index.php?mode=register");
   exit;
 }
 
-if ($password !== $confirm) {
-  $_SESSION["flash_error"] = "Passwords do not match.";
+if ($password !== $confirm || strlen($password) < 8) {
+  $_SESSION["flash_error"] = "Invalid password.";
   header("Location: /index.php?mode=register");
   exit;
 }
 
-$stmt = $pdo->prepare("SELECT id FROM users WHERE email = ?");
+$stmt = $pdo->prepare("SELECT id FROM users WHERE email = ? LIMIT 1");
 $stmt->execute([$email]);
 if ($stmt->fetch()) {
   $_SESSION["flash_error"] = "That email is already registered.";
@@ -43,6 +45,7 @@ $hash = password_hash($password, PASSWORD_DEFAULT);
 $stmt = $pdo->prepare("INSERT INTO users (name, email, password_hash) VALUES (?, ?, ?)");
 $stmt->execute([$name, $email, $hash]);
 
+session_regenerate_id(true);
 $_SESSION["user_id"] = (int)$pdo->lastInsertId();
 $_SESSION["user_name"] = $name;
 
