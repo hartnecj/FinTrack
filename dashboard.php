@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 session_start();
 
 if (!isset($_SESSION["user_id"])) {
@@ -16,7 +18,13 @@ $name = $_SESSION["user_name"] ?? "User";
 </head>
 <body>
   <h2>Dashboard</h2>
+
   <p>Welcome, <?php echo htmlspecialchars($name); ?>.</p>
+
+  <p><a href="/groups.php">Groups</a></p>
+  <p><a href="/budgets.php">Budgets</a></p>
+  <p><a href="/expenses.php">Expenses</a></p>
+
   <p><a href="/auth/logout.php">Logout</a></p>
 </body>
 </html>
