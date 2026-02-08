@@ -1,13 +1,19 @@
 <?php
-declare(strict_types=1);
 require_once __DIR__ . "/auth_guard.php";
 ?>
-<!DOCTYPE html>
-<html>
-<head><meta charset="utf-8"><title>Budgets</title></head>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Budgets</title>
+  <link rel="stylesheet" href="/assets/css/style.css">
+</head>
 <body>
-  <h2>Budgets</h2>
-  <p>Coming soon.</p>
-  <p><a href="/dashboard.php">Back to dashboard</a></p>
+  <main class="container">
+    <h1>Budgets</h1>
+    <p>Coming soon.</p>
+    <p><a href="/dashboard.php">Back to dashboard</a></p>
+  </main>
 </body>
 </html>
