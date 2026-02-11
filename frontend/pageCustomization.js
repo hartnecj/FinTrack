@@ -1,11 +1,13 @@
+/*----------------------*
+* variable declarations *
+*-----------------------*/
+
 //value that tracks if dark mode is on or off
 var isDarkMode = localStorage.getItem('mode');
 
-//if it is true we call changeStyles automatically
-if (isDarkMode === "true"){
-  isDarkMode = "false";
-  changeStyles();
-}//end if isDarkMode
+/*---------------------*
+* function definitions *
+*----------------------*/
 
 //function that checks if styles are applied anc changes them
 function changeStyles(){
@@ -26,8 +28,15 @@ function changeStyles(){
     localStorage.setItem('mode', isDarkMode);
 }//end changeStyles()
 
-//j-query selector that triggers function on switch toggle
-$("#styleSwitch").change(changeStyles);
+/*----------------------------*
+* function calls and triggers *
+*-----------------------------*/
 
-//console log for debugging
-console.log(isDarkMode);
+//if it is true we call changeStyles automatically
+if (isDarkMode === "true"){
+  isDarkMode = "false";
+  changeStyles();
+}//end if isDarkMode
+
+//jQuery selector that triggers function on switch toggle
+$("#styleSwitch").change(changeStyles);
