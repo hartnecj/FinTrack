@@ -51,9 +51,10 @@ if ($group_id <= 0) {
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>Budgets</title>
-        <link rel="stylesheet" href="/assets/style.css">
+        <!-- NOTE: updated CSS 2/16/26 -->
+        <link rel="stylesheet" href="/assets/style.css?v=5">    
     </head>
-    <body>
+    <body class="ft-page">
         <main class="container" style="padding: 30px;">
             <h1>Budgets</h1>
             <p>You need to join or create a group before you can create budgets.</p>
@@ -214,10 +215,10 @@ $budgets = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <script src="https://code.jquery.com/jquery-4.0.0.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <!-- NOTE: Correct path (your project uses /assets/style.css, not /assets/css/style.css) -->
-    <link rel="stylesheet" href="/assets/style.css">
+    <!-- NOTE: updated CSS 2/16/26 -->
+    <link rel="stylesheet" href="/assets/style.css?v=5">
 </head>
-<body>
+<body class="ft-page">
 <nav>
     <ul>
         <li><a href="/"><button class="btn">Home</button></a></li>

@@ -26,6 +26,6 @@ if (empty($_SESSION['csrf_token'])) {
 
 // If not logged in, send user to our actual login page.
 if (empty($_SESSION["user_id"])) {
-    header("Location: /auth/login.php");
+    header("Location: /FinTrack/auth/login.php");
     exit;
 }

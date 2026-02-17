@@ -2,250 +2,312 @@
 
 /* root css variables */
 :root{
-  --bg-color:                    rgba(145,182,235, 0.8);
-  --text-color:                                   white;
-  --focus-color:                                   blue;
-  --div-color:                    rgba(66,143,242, 0.8);
-  --link-color:                                   white;
-  --border-color:              rgba(255, 255, 255, 0.5);
-  --btn-color:                    rgba(66,143,242, 0.8);
-  --bg-image:                                   url('');
-  --btn-hover-color:               rgba(66,143,242, .5);
+  --ft-text: white;
+
+  --ft-bg:
+    radial-gradient(900px 600px at 20% 15%, rgba(120, 180, 255, .18), transparent 55%),
+    radial-gradient(900px 600px at 85% 25%, rgba(255, 120, 200, .14), transparent 55%),
+    linear-gradient(180deg, #070913, #070913);
+
+  --ft-panel-bg: rgba(255,255,255,0.06);
+  --ft-panel-border: rgba(255,255,255,0.12);
+  --ft-shadow: 0 18px 55px rgba(0,0,0,0.45);
+
+  --ft-nav-bg: rgba(8,10,18,0.65);
+  --ft-nav-border: rgba(255,255,255,0.10);
+
+  --ft-btn-bg: rgba(255,255,255,0.06);
+  --ft-btn-border: rgba(255,255,255,0.12);
+  --ft-btn-hover-bg: rgba(255,255,255,0.10);
+  --ft-btn-hover-border: rgba(255,255,255,0.18);
+
+  --ft-input-bg: rgba(10,12,20,0.65);
+  --ft-input-border: rgba(255,255,255,0.14);
+  --ft-input-focus: rgba(120,180,255,0.55);
 }
 
-/* darkMode css variables */
+/* darkMode css variables (optional compatibility with old toggle naming) */
 .darkMode{
-  --bg-color:                                   #121212;
-  --text-color:                                   black;
-  --focus-color:                                #888888;
-  --div-color:                                  #444444;
-  --link-color:                                   black;
-  --signup-color:                                 white;
-  --btn-color:                                  #121212;
-  --btn-hover-color:                                   ;
+  --ft-text: white;
+  --ft-bg:
+    radial-gradient(900px 600px at 20% 15%, rgba(120, 180, 255, .18), transparent 55%),
+    radial-gradient(900px 600px at 85% 25%, rgba(255, 120, 200, .14), transparent 55%),
+    linear-gradient(180deg, #070913, #070913);
+  --ft-panel-bg: rgba(255,255,255,0.06);
+  --ft-panel-border: rgba(255,255,255,0.12);
+  --ft-nav-bg: rgba(8,10,18,0.65);
+  --ft-nav-border: rgba(255,255,255,0.10);
+  --ft-btn-bg: rgba(255,255,255,0.06);
+  --ft-btn-border: rgba(255,255,255,0.12);
+  --ft-btn-hover-bg: rgba(255,255,255,0.10);
+  --ft-btn-hover-border: rgba(255,255,255,0.18);
+  --ft-input-bg: rgba(10,12,20,0.65);
+  --ft-input-border: rgba(255,255,255,0.14);
+  --ft-input-focus: rgba(120,180,255,0.55);
 }
 
-/* light mode css variables */
+/* light mode css variables (optional compatibility with old toggle naming) */
 .lightMode{
-  --bg-color:                    rgba(145,182,235, 0.8);
-  --text-color:                                   white;
-  --focus-color:                                   blue;
-  --div-color:                    rgba(66,143,242, 0.8);
-  --link-color:                                   white;
-  --signup-color:                                 white;
-  --border-color:                  rgba(0, 8, 103, 0.8);
-  --btn-color:                     rgba(66,143,242, .5);
-  --btn-hover-color: ;
+  --ft-text: #0b1020;
+
+  --ft-bg:
+    radial-gradient(900px 600px at 20% 15%, rgba(66,143,242, .18), transparent 55%),
+    radial-gradient(900px 600px at 85% 25%, rgba(120, 180, 255, .18), transparent 55%),
+    linear-gradient(180deg, rgba(245,248,255,1), rgba(235,242,255,1));
+
+  --ft-panel-bg: rgba(255,255,255,0.70);
+  --ft-panel-border: rgba(0,0,0,0.10);
+  --ft-shadow: 0 18px 55px rgba(0,0,0,0.20);
+
+  --ft-nav-bg: rgba(255,255,255,0.70);
+  --ft-nav-border: rgba(0,0,0,0.10);
+
+  --ft-btn-bg: rgba(255,255,255,0.65);
+  --ft-btn-border: rgba(0,0,0,0.12);
+  --ft-btn-hover-bg: rgba(255,255,255,0.85);
+  --ft-btn-hover-border: rgba(0,0,0,0.18);
+
+  --ft-input-bg: rgba(255,255,255,0.75);
+  --ft-input-border: rgba(0,0,0,0.12);
+  --ft-input-focus: rgba(66,143,242,0.45);
 }
 
 /*--------- E N D  C S S  V A R I A B L E S ----------*/
 
-body{
-  background-image:                     var(--bg-image);
-  background-color:                     var(--bg-color);
-  color:                              var(--text-color);
+
+/* -------------G L O B A L  /  B A S E --------------*/
+
+body.ft-page{
+  min-height: 100vh;
+  color: var(--ft-text);
+  background: var(--ft-bg);
+  position: relative;
+  margin: 0;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  padding-top: 74px;
+  padding-bottom: 60px;
 }
-/* the hero/main section of the page */
-.main-container{
-  width:                                            70%;
-  border-radius:                                   10px;
-  margin:                                          auto;
-  margin-top:                                      15vh;
-  text-align:                                    center;
-  -webkit-box-shadow:  3px 6px 17px 6px rgba(0,0,0,0.7); 
-  box-shadow:          3px 6px 17px 6px rgba(0,0,0,0.7);
-}
-/* shared styles between the navigation and footer */
-nav, footer{
+
+body.ft-page::before{
+  content:"";
   position: fixed;
-  width:                                           100%;
-  background-color:                    var(--div-color);
-  -webkit-box-shadow:  3px 6px 17px 6px rgba(0,0,0,0.1); 
-  box-shadow:          3px 6px 17px 6px rgba(0,0,0,0.1);
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(rgba(255,255,255,.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.04) 1px, transparent 1px);
+  background-size: 36px 36px;
+  opacity: .35;
 }
+
+/*--------- E N D  G L O B A L  /  B A S E ----------*/
+
+
+/* -------------N A V  &  F O O T E R --------------*/
+
+/* shared styles between the navigation and footer */
+body.ft-page nav,
+body.ft-page footer{
+  position: fixed;
+  left: 0;
+  right: 0;
+  width: 100%;
+  z-index: 999;
+  background: var(--ft-nav-bg) !important;
+  border-color: var(--ft-nav-border) !important;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+body.ft-page nav{
+  top: 0;
+  border-bottom: 1px solid var(--ft-nav-border);
+}
+
+body.ft-page footer{
+  bottom: 0;
+  border-top: 1px solid var(--ft-nav-border);
+}
+
 /* styles around the list items in the nav */
-nav > ul{
-  height:                                           7vh;
-  display:                                         flex;
-  max-width:                                       100%;
-  justify-content:                         space-around;
-  align-items:                                   center;
-  padding:                                          1vh;
-}
-/* each list item in the navigation bar */
-nav > ul > li {
-  padding-left:                                      4%;
-  padding-right:                                     2%;
-  list-style-type:                                 none;
-}
-/* button tag styling */
-button{
-  color:                              var(--link-color);
-  text-decoration:                                 none;
-  padding:                                          5px;
-  border:                 1px solid var(--border-color);
-  border-radius:                                   10px;
-  background-color:                    var(--btn-color);
-}
-/* on hover specific button styling */
-button:hover{
-  background-color:              var(--btn-hover-color);
-}
-/* input box class styling */
-.input-box{
-  padding:                                           5%;
-}
-/* section tag styling */
-section{
-  background-color:                    var(--div-color);
-  margin-top:                                      10vh;
-}
-/* footer specific styling */
-footer{
-  bottom:                                             0;
-}
-nav{
-  top:                                                0;
-}
-/* styling for every child element of the footer tag */
-footer > *{
-  padding-left:                                      4%;
-  padding-right:                                     2%;
-}
-/* dark mode toggle styling */
-#styleSwitch{
-  background-color:                       var(--btn-bg);
+body.ft-page nav ul{
+  list-style: none;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  padding: 14px 10px;
+  margin: 0;
+  flex-wrap: wrap;
 }
 
-form{
-  padding:                                           5%;
+/*--------- E N D  N A V  &  F O O T E R ----------*/
+
+
+/* -------------M A I N  C O N T A I N E R --------------*/
+
+/* the hero/main section of the page */
+body.ft-page .main-container{
+  width: min(1100px, 92vw);
+  margin: 26px auto;
+  border-radius: 16px;
+  text-align: left;
+  background: var(--ft-panel-bg);
+  border: 1px solid var(--ft-panel-border);
+  box-shadow: var(--ft-shadow);
 }
 
-input{
-  background-color:                    rgba(0, 0, 0, 0);
+body.ft-page .main-container > div{
+  padding: 26px !important;
 }
 
-#login-btn{
-  color:                              var(--text-color);
-  font-weight:                                      400;
-  border-radius:                                   10px;
+/*--------- E N D  M A I N  C O N T A I N E R ----------*/
+
+
+/* -------------T Y P O G R A P H Y --------------*/
+
+body.ft-page h2{
+  font-size: 32px;
+  font-weight: 800;
+  letter-spacing: -0.4px;
+  margin: 2px 0 10px;
 }
 
-#signup{
-  text-align:                                    center;
-  margin-top:                                       1vh;
+body.ft-page h4{
+  font-weight: 750;
+  margin: 18px 0 10px;
 }
 
-h6 > a{
-  color:                            var(--signup-color);
-  text-decoration:                                 none;
+/*--------- E N D  T Y P O G R A P H Y ----------*/
+
+
+/* -------------A L E R T S  &  C A R D S --------------*/
+
+body.ft-page .alert{
+  border-radius: 14px;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.14);
+  color: white;
 }
 
-#first-name, .input-label{
-  margin-right:                                    15px;
+body.ft-page .card{
+  border-radius: 16px !important;
+  background: var(--ft-panel-bg) !important;
+  border: 1px solid var(--ft-panel-border) !important;
+  box-shadow: 0 14px 40px rgba(0,0,0,0.35);
+  color: var(--ft-text) !important;
 }
 
-.left-input-label{
-  margin-left:                                     15px;
+body.ft-page .card .card-title{
+  font-weight: 800;
 }
 
-#image-1, #image-2, #image-3{
-  width:                                           100%;
-  height:                                          80vh;
-  background-image:              url('images/img1.JPG');
-  background-size:                                cover;
-  background-repeat:                          no-repeat;
-  background-position:                           center;
+/*--------- E N D  A L E R T S  &  C A R D S ----------*/
+
+
+/* -------------B U T T O N S --------------*/
+
+body.ft-page .btn{
+  background: var(--ft-btn-bg) !important;
+  color: var(--ft-text) !important;
+  border: 1px solid var(--ft-btn-border) !important;
+  border-radius: 12px !important;
 }
 
-.cards-section{
-  margin:                                          auto; 
-  margin-bottom:                                   10vh;
-  width:                                            70%;   
-  background-color:                         transparent;
-  display:                                         flex;
-  justify-content:                        space-between;
+body.ft-page nav .btn{
+  padding: 8px 14px !important;
+  transition: transform .12s ease, background .2s ease, border-color .2s ease;
 }
 
-#image-2{
-  background-image:              url('images/img2.JPG');
+body.ft-page .btn:hover{
+  background: var(--ft-btn-hover-bg) !important;
+  border-color: var(--ft-btn-hover-border) !important;
 }
 
-#image-3{
-  background-image:              url('images/img3.JPG');
+body.ft-page nav .btn:hover{
+  transform: translateY(-1px);
 }
 
-.card-title{
-  margin-top:                                       5vh;
+/*--------- E N D  B U T T O N S ----------*/
+
+
+/* -------------F O R M S  &  I N P U T S --------------*/
+
+body.ft-page input,
+body.ft-page select,
+body.ft-page textarea{
+  background: var(--ft-input-bg) !important;
+  border: 1px solid var(--ft-input-border) !important;
+  color: white !important;
+  border-radius: 12px !important;
 }
 
-.card > *{
-  color:                                          black;
+body.ft-page input:focus,
+body.ft-page select:focus,
+body.ft-page textarea:focus{
+  border-color: var(--ft-input-focus) !important;
+  box-shadow: 0 0 0 4px rgba(120,180,255,0.16) !important;
 }
 
-.text-overlay{
-  text-align:                                    center;
-  background-color:                 rgba(0, 0, 0, 0.75);
-  width:                                           25vh;
-  padding:                                         10px;
+body.ft-page a{
+  color: rgba(234,240,255,0.90);
 }
 
-.card{
-  margin:                                          auto;
+/*--------- E N D  F O R M S  &  I N P U T S ----------*/
+
+
+/* -------------T A B L E S --------------*/
+
+/* Make table text readable everywhere (Dashboard / Expenses / Budgets / Groups) */
+body.ft-page .table{
+  color: white !important;
 }
 
-/*------ P A G E  S P E C I F I C  S T Y L I N G ------*/
-
-/* dashboard specific css styling */
-.main-container-dashboard{
-  padding: 10vh;
-  height: fit-content;
+body.ft-page .table thead th{
+  background: rgba(8,10,18,0.85) !important;
+  color: rgba(234,240,255,0.90) !important;
+  border-bottom: 1px solid rgba(255,255,255,0.10) !important;
 }
 
-/* home specific css styling */
-.main-container-home{
-  width:                                           90%;
-  height:                                         80vh;
+body.ft-page .table tbody td{
+  border-bottom: 1px solid rgba(255,255,255,0.08) !important;
+  color: white !important;
 }
+
+body.ft-page .table-striped > tbody > tr:nth-of-type(odd) > *{
+  background: rgba(255,255,255,0.03) !important;
+}
+
+body.ft-page .table-striped > tbody > tr:hover > *{
+  background: rgba(255,255,255,0.05) !important;
+}
+
+/* Extra hard override for nested elements inside table cells */
+body.ft-page table.table tbody td,
+body.ft-page table.table tbody th,
+body.ft-page table.table tbody td *,
+body.ft-page table.table tbody th *{
+  color: white !important;
+}
+
+/*--------- E N D  T A B L E S ----------*/
+
+
+/* -------------F O O T E R  T O G G L E --------------*/
+
+body.ft-page .form-switch,
+body.ft-page .form-check-label{
+  color: rgba(234,240,255,0.75);
+}
+
+/*--------- E N D  F O O T E R  T O G G L E ----------*/
+
 
 /*--- R E S P O N S I V E  M E D I A  Q U E R I E S ---*/
 
 /*media query for screens over 900 px wide*/
 @media (min-width: 900px){
-  .main-container{
-    width:                                         30%;
+  body.ft-page nav ul{
+    justify-content: flex-end;
   }
-  
-  nav > ul{
-    height:                                        5vh;
-    display:                                      flex;
-    max-width:                                    100%;
-    justify-content:                               end;
-    align-items:                                center;
-  }
-
-  nav > ul > li {
-    padding-left:                                   4%;
-    padding-right:                                  2%;
-    list-style-type:                              none;
-  }
-
-  button{
-    color:                           var(--link-color);
-    text-decoration:                              none;
-    padding:                                       5px;
-    border:              1px solid var(--border-color);
-    border-radius                                 10px;
-    background-color:                 var(--btn-color);
-    width:                                       100px;
-  }
-
-  button:hover{
-    background-color:           var(--btn-hover-color);
-  }
-  
-  .main-container-home{
-    width:                                         90%;
-  }
-  
-}/* end 900px minimum media query*/
+}
+/* end 900px minimum media query*/
