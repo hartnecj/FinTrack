@@ -46,7 +46,7 @@ if (!empty($_SESSION['user_id'])) {
             <div class="row align-items-center" id="image-1">
               <div class="col text-center carousel-text text-overlay">
                 <h2> Welcome To FinTrac </h2>
-                <h5 class="text-muted">Something else</h5>
+                <h5 class="text-muted">A shared financial tracking tool for groups</h5>
                 <a href="/auth/login.php"><button>Log in</button></a>
               </div>
             </div>  
@@ -93,7 +93,7 @@ if (!empty($_SESSION['user_id'])) {
               <div class="card-body">
                 <h5 class="card-title">Free Signup</h5>
                 <p class="card-text">Register to start tracking budgets</p>
-                <a href="/auth/register.php" class="btn-btn-primary">Register</a>
+                <a href="/auth/register.php"><button class="btn-btn-primary">Register</button></a>
               </div>
             </div><!-- end card 1 -->
           </div>
@@ -104,7 +104,7 @@ if (!empty($_SESSION['user_id'])) {
               <div class="card-body">
                 <h5 class="card-title">Connect with groups</h5>
                 <p class="card-text">Groups and shared budget features</p>
-                <a href="/auth/login.php" class="btn-btn-primary">Log in</a>
+                <a href="/auth/login.php"><button class="btn-btn-primary">Log in</button></a>
               </div>
             </div><!-- end card 2 -->
           </div>
@@ -114,8 +114,8 @@ if (!empty($_SESSION['user_id'])) {
               <img src="https://maryrei.codewizardshq.com/CapstoneCSP/images/img4.JPG" class="card-img-top" alt="card 1 image">
               <div class="card-body">
                 <h5 class="card-title">Budgets</h5>
-                <p class="card-text">Manage your accounts with budgets and visualize spending</p>
-                <a href="/auth/login.php" class="btn-btn-primary">Log in</a>
+                <p class="card-text">Visualize spending</p>
+                <a href="/auth/login.php"><button class="btn-btn-primary">Log in</button></a>
               </div>
             </div><!-- end card 3 -->
           </div>
