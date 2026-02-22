@@ -8,33 +8,135 @@ if (!empty($_SESSION['user_id'])) {
 ?>
 <!DOCTYPE html>
 <html lang="en">
+  
   <head>
+    <!-- title tag -->
     <title>FinTrack - Home</title>
+    <!-- link to bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <!-- link to JQuery -->
     <script src="https://code.jquery.com/jquery-4.0.0.js" integrity="sha256-9fsHeVnKBvqh3FB2HYu7g2xseAZ5MlN6Kz/qnkASV8U=" crossorigin="anonymous"></script>
+    <!-- meta viewport tag -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/assets/style.css">
-  </head>
+    <!-- link to style.css -->
+    <link rel="stylesheet" href="/assets/landingStyles.css">
+    <!-- bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  </head><!-- end head tag -->
   <body>
-    <nav>
+    
+    <nav><!-- navigation section -->
       <ul>
-        <li><a href="/landing.php"><button class="btn">Home</button></a></li>
-        <li><a href="/auth/login.php"><button class="btn">Login</button></a></li>
-        <li><a href="/auth/register.php"><button class="btn">Sign Up</button></a></li>
+        <li><a href="/landing.php"><button class="btn page-btn">Home</button></a></li>
+        <li><a href="/auth/login.php"><button class="btn page-btn">Login</button></a></li>
+        <li><a href="/auth/register.php"><button class="btn page-btn">Register</button></a></li>
       </ul>
-    </nav>
+    </nav><!-- end navigation-->
 
-    <section class="main-container shadow-lg">
-      <img src="https://static0.thegamerimages.com/wordpress/wp-content/uploads/2022/10/zenyatta-hero-select.jpg?w=1600&h=1200&fit=crop" class="img-fluid">
-    </section>
+    <!-- main section -->
+    <section class="main-container shadow-lg main-container-home container-lg carousel slide" id="featured-images" data-bs-ride="carousel">
+        <div class="carousel-indicators">
+          <button type="button" class="active" data-bs-target="#featured-images" data-bs-slide-to="0"></button>
+          <button type="button"                data-bs-target="#featured-images" data-bs-slide-to="1"></button>
+          <button type="button"                data-bs-target="#featured-images" data-bs-slide-to="2"></button>
+        </div><!-- end carousel-indicators buttons-->
+        <div class="carousel-inner">
+          
+          <div class="carousel-item active"><!-- carousel item 1 -->
+            <div class="row align-items-center" id="image-1">
+              <div class="col text-center carousel-text text-overlay">
+                <h2> Welcome To FinTrac </h2>
+                <h5 class="text-muted">Something else</h5>
+                <a href="/auth/login.php"><button>Log in</button></a>
+              </div>
+            </div>  
+          </div><!-- end carousel item 1 -->
+          
+          <div class="carousel-item"><!-- carousel item 2 -->
+            <div class="row align-items-center" id="image-2">
+              <div class="col text-center carousel-text text-overlay">
+                <h2> Welcome To FinTrac </h2>
+                <h5 class="text-muted">Log In Now</h5>
+                <a href="/auth/login.php"><button>Log in</button></a>
+              </div>
+            </div>
+          </div><!-- end carousel-item 2 -->
+          
+          
+          <div class="carousel-item"><!-- carousel-item 3 -->
+            <div class="row align-items-center" id="image-3">
+              <div class="col text-center carousel-text text-overlay">
+                <h2> Welcome To FinTrac </h2>
+                <h5 class="text-muted">Keep Track of Group expenses conveniently</h5>
+                <a href="/auth/login.php"><button>Log in</button></a>
+              </div>
+            </div>
+          </div><!-- end carousel-item 3 -->
+          
+        </div><!-- end carousel-inner -->
 
-    <footer>
+      
+    </section><!-- end main section -->
+    
+    <div class="text-center card-title">
+      <h3> Information </h3>
+    </div>
+    <!-- cards section -->
+    <section class="cards-section">
+
+      <div class="container-lg">
+        <div class="row">
+          <div class="col">
+            
+            <div class="card" style="width: 18rem;"><!-- start card 1 -->
+              <img src="https://maryrei.codewizardshq.com/CapstoneCSP/images/img4.JPG" class="card-img-top" alt="card 1 image">
+              <div class="card-body">
+                <h5 class="card-title">Free Signup</h5>
+                <p class="card-text">Register to start tracking budgets</p>
+                <a href="/auth/register.php" class="btn-btn-primary">Register</a>
+              </div>
+            </div><!-- end card 1 -->
+          </div>
+          
+          <div class="col">
+            <div class="card" style="width: 18rem;"><!-- start card 2 -->
+              <img src="https://maryrei.codewizardshq.com/CapstoneCSP/images/img4.JPG" class="card-img-top" alt="card 1 image">
+              <div class="card-body">
+                <h5 class="card-title">Connect with groups</h5>
+                <p class="card-text">Groups and shared budget features</p>
+                <a href="/auth/login.php" class="btn-btn-primary">Log in</a>
+              </div>
+            </div><!-- end card 2 -->
+          </div>
+          
+          <div class="col">
+            <div class="card" style="width: 18rem;"><!-- start card 3 -->
+              <img src="https://maryrei.codewizardshq.com/CapstoneCSP/images/img4.JPG" class="card-img-top" alt="card 1 image">
+              <div class="card-body">
+                <h5 class="card-title">Budgets</h5>
+                <p class="card-text">Manage your accounts with budgets and visualize spending</p>
+                <a href="/auth/login.php" class="btn-btn-primary">Log in</a>
+              </div>
+            </div><!-- end card 3 -->
+          </div>
+          
+        </div><!-- end row -->
+      </div><!-- end container-lg -->
+    
+    </section><!-- end cards section -->
+    
+    <footer><!-- footer -->
       <div class="form-check form-switch">
         <input class="form-check-input" type="checkbox" role="switch" id="styleSwitch">
         <label class="form-check-label" for="styleSwitch" id="styleLabel"> Light mode: On </label>
       </div>
-    </footer>
+    </footer><!-- end footer -->
+
+    <!-- link to external JS file-->
+
 
     <script src="/assets/pageCustomization.js"></script>
-  </body>
-</html>
+
+    
+  </body><!-- end body tag -->
+</html><!-- end HTML tag -->
