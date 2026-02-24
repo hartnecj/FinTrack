@@ -32,7 +32,6 @@ $name      = $_SESSION["user_name"] ?? "User";
 */
 $group_id  = (int)($_SESSION["active_group_id"] ?? 0);
 
-$error = '';
 $active_group = null;
 
 // Dashboard metrics (defaults)
@@ -66,7 +65,7 @@ if ($group_id <= 0) {
 
     if ($row) {
         $_SESSION["active_group_id"] = (int)$row["id"];
-        header("Location: /dashboard.php");
+        header("Location: dashboard.php");
         exit;
     }
 }
@@ -92,7 +91,7 @@ if ($group_id > 0) {
 
     if (!$active_group) {
         unset($_SESSION["active_group_id"]);
-        header("Location: /dashboard.php");
+        header("Location: dashboard.php");
         exit;
     }
 }
@@ -150,22 +149,36 @@ if ($group_id > 0 && $active_group) {
     <title>FinTrack - Dashboard</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <script src="https://code.jquery.com/jquery-4.0.0.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <!-- NOTE: updated CSS 2/16/26 -->
-    <link rel="stylesheet" href="/assets/style.css?v=5">
+    <link rel="stylesheet" href="assets/style.css?v=5">
 </head>
 
-<body class="ft-page">
+<!-- Jordon -->
+<!-- <body class="ft-page">
 <nav>
     <ul>
         <li><a href="/"><button class="btn">Home</button></a></li>
         <li><a href="/dashboard.php"><button class="btn">Dashboard</button></a></li>
         <li><a href="/budgets.php"><button class="btn">Budgets</button></a></li>
         <li><a href="/expenses.php"><button class="btn">Expenses</button></a></li>
+        <li><a href="/expenses.php"><button class="btn">Expenses</button></a></li>
         <li><a href="/groups.php"><button class="btn">Groups</button></a></li>
         <li><a href="/auth/logout.php"><button class="btn">Logout</button></a></li>
+    </ul>
+</nav> -->
+
+<!-- for local testing only -->
+<body class="ft-page">
+<nav>
+    <ul>
+        <li><a href="./"><button class="btn">Home</button></a></li>
+        <li><a href="dashboard.php"><button class="btn">Dashboard</button></a></li>
+        <li><a href="budgets.php"><button class="btn">Budgets</button></a></li>
+        <li><a href="expenses.php"><button class="btn">Expenses</button></a></li>
+        <li><a href="groups.php"><button class="btn">Groups</button></a></li>
+        <li><a href="auth/logout.php"><button class="btn">Logout</button></a></li>
     </ul>
 </nav>
 
@@ -181,9 +194,9 @@ if ($group_id > 0 && $active_group) {
             </div>
 
             <div class="d-grid gap-2" style="max-width: 300px; margin: 20px auto;">
-                <a href="/groups.php"><button class="btn w-100">Go to Groups</button></a>
-                <a href="/expenses.php"><button class="btn w-100">Expenses</button></a>
-                <a href="/budgets.php"><button class="btn w-100">Budgets</button></a>
+                <a href="groups.php"><button class="btn w-100">Go to Groups</button></a>
+                <a href="expenses.php"><button class="btn w-100">Expenses</button></a>
+                <a href="budgets.php"><button class="btn w-100">Budgets</button></a>
             </div>
 
         <?php else: ?>
@@ -223,14 +236,45 @@ if ($group_id > 0 && $active_group) {
                         <div class="card-body">
                             <h5 class="card-title">Quick Actions</h5>
                             <div class="d-grid gap-2">
-                                <a href="/expenses.php"><button class="btn w-100">Add Expense</button></a>
-                                <a href="/budgets.php"><button class="btn w-100">Create Budget</button></a>
-                                <a href="/groups.php"><button class="btn w-100">Manage Groups</button></a>
+                                <a href="expenses.php"><button class="btn w-100">Add Expense</button></a>
+                                <a href="budgets.php"><button class="btn w-100">Create Budget</button></a>
+                                <a href="groups.php"><button class="btn w-100">Manage Groups</button></a>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+            
+            <!-- Spending Breakdown Pie Chart -->
+            <div class="row" style="margin-top: 20px;">
+                <div class="col-lg-6 mb-3">
+                    <div class="card shadow-sm">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <h5 class="card-title mb-1">Spending Breakdown</h5>
+                                    <small class="text-muted">Last 30 days</small>
+                                </div>
+                                <div class="text-end">
+                                    <small class="text-muted">Total</small>
+                                    <div class="fw-bold" id="ftPieTotal">$0.00</div>
+                                </div>
+                            </div>
+
+                            <div class="mt-3" style="height:320px;">
+                                <canvas id="ftSpendingPie"></canvas>
+                            </div>
+
+                            <div class="mt-3" id="ftPieEmptyState" style="display:none;">
+                                <div class="alert alert-secondary mb-0">
+                                    No expenses found for this period yet.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
 
             <!-- Recent expenses -->
             <h4 style="margin-top: 30px;">Recent Expenses</h4>
@@ -273,7 +317,101 @@ if ($group_id > 0 && $active_group) {
     </div>
 </footer>
 
-<!-- NOTE: Correct path (your project uses /assets/pageCustomization.js, not /assets/js/pageCustomization.js) -->
-<script src="/assets/pageCustomization.js"></script>
+<!-- pie chart -->
+<!-- Spending Breakdown Chart (Category totals for the active group) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script>
+(() => {
+  // Chart canvas must exist (only visible when group exists)
+  const canvas = document.getElementById("ftSpendingPie");
+  if (!canvas) return;
+
+  const totalEl = document.getElementById("ftPieTotal");
+  const emptyEl = document.getElementById("ftPieEmptyState");
+
+  // Default timeframe for the dashboard chart
+  const range = "30d";
+
+  // Pull grouped category totals from JSON endpoint
+  fetch(`expenses_pie_chart.php?range=${encodeURIComponent(range)}`)
+    .then((res) => res.json())
+    .then((data) => {
+      // Endpoint-level error (ex: no active group, server error)
+      if (data.error) {
+        canvas.parentElement.style.display = "none";
+        if (emptyEl) {
+          emptyEl.style.display = "block";
+          emptyEl.innerHTML = `<div class="alert alert-warning mb-0">${data.error}</div>`;
+        }
+        return;
+      }
+
+      const labels = data.labels || [];
+      const values = data.values || [];
+      const total = Number(data.total || 0);
+
+      // Update total shown on card
+      if (totalEl) totalEl.textContent = `$${total.toFixed(2)}`;
+
+      // No categories = show empty state
+      if (!labels.length) {
+        canvas.parentElement.style.display = "none";
+        if (emptyEl) emptyEl.style.display = "block";
+        return;
+      }
+
+      // If script re-runs, destroy previous chart instance
+      if (window.ftSpendingChart) {
+        window.ftSpendingChart.destroy();
+      }
+
+      // Render donut chart
+      window.ftSpendingChart = new Chart(canvas.getContext("2d"), {
+        type: "doughnut",
+        data: {
+          labels,
+          datasets: [{ data: values, borderWidth: 0 }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          cutout: "65%",
+          plugins: {
+            legend: {
+              position: "bottom",
+              labels: {
+                color: "#ffffff",
+                font: { size: 14 }
+              }
+            },
+            // font hover
+            tooltip: {
+              titleFont: { size: 18, weight: "bold" },
+              bodyFont: { size: 16 },
+              padding: 12,
+              callbacks: {
+                label: function (context) {
+                  const v = Number(context.raw || 0);
+                  return `${context.label}: $${v.toFixed(2)}`;
+                }
+              }
+            }
+          }
+        }
+      });
+    })
+    .catch(() => {
+      // Network failure or invalid JSON
+      canvas.parentElement.style.display = "none";
+      if (emptyEl) {
+        emptyEl.style.display = "block";
+        emptyEl.innerHTML = `<div class="alert alert-warning mb-0">Unable to load chart data.</div>`;
+      }
+    });
+})();
+// pie chart script end
+</script>
+
+<script src="assets/pageCustomization.js"></script>
 </body>
 </html>

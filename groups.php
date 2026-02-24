@@ -220,17 +220,17 @@ if ($active_group) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <!-- NOTE: updated CSS 2/16/26 -->
-    <link rel="stylesheet" href="/assets/style.css?v=5">
+    <link rel="stylesheet" href="assets/style.css?v=5">
 </head>
 <body class="ft-page">
 <nav>
     <ul>
-        <li><a href="/"><button class="btn">Home</button></a></li>
-        <li><a href="/dashboard.php"><button class="btn">Dashboard</button></a></li>
-        <li><a href="/budgets.php"><button class="btn">Budgets</button></a></li>
-        <li><a href="/expenses.php"><button class="btn">Expenses</button></a></li>
-        <li><a href="/groups.php"><button class="btn">Groups</button></a></li>
-        <li><a href="/auth/logout.php"><button class="btn">Logout</button></a></li>
+        <li><a href="./"><button class="btn">Home</button></a></li>
+        <li><a href="dashboard.php"><button class="btn">Dashboard</button></a></li>
+        <li><a href="budgets.php"><button class="btn">Budgets</button></a></li>
+        <li><a href="expenses.php"><button class="btn">Expenses</button></a></li>
+        <li><a href="groups.php"><button class="btn">Groups</button></a></li>
+        <li><a href="auth/logout.php"><button class="btn">Logout</button></a></li>
     </ul>
 </nav>
 
@@ -250,8 +250,8 @@ if ($active_group) {
             <p>You are not currently in a group.</p>
 
             <div class="d-grid gap-2" style="max-width: 300px; margin: 30px auto;">
-                <a href="/groups/create.php"><button class="btn w-100">Create a Group</button></a>
-                <a href="/groups/join.php"><button class="btn w-100">Join a Group</button></a>
+                <a href="groups/create.php"><button class="btn w-100">Create a Group</button></a>
+                <a href="groups/join.php"><button class="btn w-100">Join a Group</button></a>
             </div>
 
         <?php else: ?>
@@ -259,7 +259,7 @@ if ($active_group) {
             <p><strong>Your groups</strong></p>
             <div class="d-grid gap-2" style="max-width: 500px;">
                 <?php foreach ($user_groups as $g): ?>
-                    <form method="post" action="/groups.php" style="margin: 0;">
+                    <form method="post" action="groups.php" style="margin: 0;">
                         <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($_SESSION['csrf_token']); ?>">
                         <input type="hidden" name="action" value="set_active">
                         <input type="hidden" name="group_id" value="<?php echo (int)$g['id']; ?>">
@@ -272,8 +272,8 @@ if ($active_group) {
             </div>
 
             <div style="margin-top: 20px;">
-                <a href="/groups/create.php"><button class="btn">Create another group</button></a>
-                <a href="/groups/join.php"><button class="btn">Join another group</button></a>
+                <a href="groups/create.php"><button class="btn">Create another group</button></a>
+                <a href="groups/join.php"><button class="btn">Join another group</button></a>
             </div>
 
             <?php if ($active_group): ?>
@@ -314,7 +314,7 @@ if ($active_group) {
                             <?php if ($is_owner): ?>
                                 <td>
                                     <?php if ((int)$member['id'] !== $user_id): ?>
-                                        <form method="post" action="/groups.php" style="display: inline;">
+                                        <form method="post" action="groups.php" style="display: inline;">
                                             <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($_SESSION['csrf_token']); ?>">
                                             <input type="hidden" name="action" value="remove_member">
                                             <input type="hidden" name="group_id" value="<?php echo (int)$active_group['id']; ?>">
@@ -331,14 +331,14 @@ if ($active_group) {
 
                 <div style="margin-top: 30px;">
                     <?php if (!$is_owner): ?>
-                        <form method="post" action="/groups.php" style="display: inline;">
+                        <form method="post" action="groups.php" style="display: inline;">
                             <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($_SESSION['csrf_token']); ?>">
                             <input type="hidden" name="action" value="leave_group">
                             <input type="hidden" name="group_id" value="<?php echo (int)$active_group['id']; ?>">
                             <button type="submit" class="btn" onclick="return confirm('Leave this group?')">Leave Group</button>
                         </form>
                     <?php else: ?>
-                        <form method="post" action="/groups.php" style="display: inline;">
+                        <form method="post" action="groups.php" style="display: inline;">
                             <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($_SESSION['csrf_token']); ?>">
                             <input type="hidden" name="action" value="delete_group">
                             <input type="hidden" name="group_id" value="<?php echo (int)$active_group['id']; ?>">
@@ -351,7 +351,7 @@ if ($active_group) {
 
         <?php endif; ?>
 
-        <p style="margin-top: 30px;"><a href="/dashboard.php">Back to dashboard</a></p>
+        <p style="margin-top: 30px;"><a href="dashboard.php">Back to dashboard</a></p>
     </div>
 </section>
 
@@ -363,6 +363,6 @@ if ($active_group) {
 </footer>
 
 <!-- NOTE: Corrected path to match actual project structure -->
-<script src="/assets/pageCustomization.js"></script>
+<script src="assets/pageCustomization.js"></script>
 </body>
 </html>

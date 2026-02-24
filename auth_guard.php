@@ -24,8 +24,9 @@ if (empty($_SESSION['csrf_token'])) {
     $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
 }
 
-// If not logged in, send user to our actual login page.
 if (empty($_SESSION["user_id"])) {
-    header("Location: /FinTrack/auth/login.php");
+    $base = rtrim(dirname($_SERVER['SCRIPT_NAME']), '/\\');
+    header("Location: {$base}/auth/login.php");
     exit;
 }
+

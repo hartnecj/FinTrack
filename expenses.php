@@ -47,15 +47,15 @@ if ($group_id <= 0) {
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>Expenses</title>
         <!-- NOTE: updated CSS 2/16/26 -->
-        <link rel="stylesheet" href="/assets/style.css?v=5">
+        <link rel="stylesheet" href="assets/style.css?v=5">
 
     </head>
     <body class="ft-page">
         <main class="container" style="padding: 30px;">
             <h1>Expenses</h1>
             <p>You need to join or create a group before you can add expenses.</p>
-            <p><a href="/groups.php">Go to Groups</a></p>
-            <p><a href="/dashboard.php">Back to dashboard</a></p>
+            <p><a href="groups.php">Go to Groups</a></p>
+            <p><a href="dashboard.php">Back to dashboard</a></p>
         </main>
     </body>
     </html>
@@ -132,32 +132,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Validation
         if ($amount_raw === '' || !is_numeric($amount_raw)) {
             $_SESSION['flash_error'] = "Please enter a valid amount.";
-            header("Location: /expenses.php");
+            header("Location: expenses.php");
             exit;
         }
 
         $amount = (float)$amount_raw;
         if ($amount <= 0) {
             $_SESSION['flash_error'] = "Amount must be greater than 0.";
-            header("Location: /expenses.php");
+            header("Location: expenses.php");
             exit;
         }
 
         if ($expense_date === '') {
             $_SESSION['flash_error'] = "Please select an expense date.";
-            header("Location: /expenses.php");
+            header("Location: expenses.php");
             exit;
         }
 
         if (strlen($category) > 50) {
             $_SESSION['flash_error'] = "Category is too long (max 50 characters).";
-            header("Location: /expenses.php");
+            header("Location: expenses.php");
             exit;
         }
 
         if (strlen($description) > 255) {
             $_SESSION['flash_error'] = "Description is too long (max 255 characters).";
-            header("Location: /expenses.php");
+            header("Location: expenses.php");
             exit;
         }
 
@@ -167,7 +167,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt->execute([$budget_id, $group_id]);
             if (!$stmt->fetch()) {
                 $_SESSION['flash_error'] = "Invalid budget selection.";
-                header("Location: /expenses.php");
+                header("Location: expenses.php");
                 exit;
             }
         }
@@ -188,7 +188,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         ]);
 
         $_SESSION['flash_success'] = "Expense added.";
-        header("Location: /expenses.php");
+        header("Location: expenses.php");
         exit;
     }
 
@@ -207,14 +207,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         if (!$expense) {
             $_SESSION['flash_error'] = "Expense not found.";
-            header("Location: /expenses.php");
+            header("Location: expenses.php");
             exit;
         }
 
         $expense_owner_id = (int)$expense['user_id'];
         if ($expense_owner_id !== $user_id && !$is_owner) {
             $_SESSION['flash_error'] = "You don't have permission to delete that expense.";
-            header("Location: /expenses.php");
+            header("Location: expenses.php");
             exit;
         }
 
@@ -222,7 +222,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->execute([$expense_id, $group_id]);
 
         $_SESSION['flash_success'] = "Expense deleted.";
-        header("Location: /expenses.php");
+        header("Location: expenses.php");
         exit;
     }
 }
@@ -257,17 +257,17 @@ $expenses = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <script src="https://code.jquery.com/jquery-4.0.0.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- NOTE: updated CSS 2/16/26 -->
-    <link rel="stylesheet" href="/assets/style.css?v=5">
+    <link rel="stylesheet" href="assets/style.css?v=5">
 </head>
 <body class="ft-page">
 <nav>
     <ul>
         <li><a href="/"><button class="btn">Home</button></a></li>
-        <li><a href="/dashboard.php"><button class="btn">Dashboard</button></a></li>
-        <li><a href="/budgets.php"><button class="btn">Budgets</button></a></li>
-        <li><a href="/expenses.php"><button class="btn">Expenses</button></a></li>
-        <li><a href="/groups.php"><button class="btn">Groups</button></a></li>
-        <li><a href="/auth/logout.php"><button class="btn">Logout</button></a></li>
+        <li><a href="dashboard.php"><button class="btn">Dashboard</button></a></li>
+        <li><a href="budgets.php"><button class="btn">Budgets</button></a></li>
+        <li><a href="expenses.php"><button class="btn">Expenses</button></a></li>
+        <li><a href="groups.php"><button class="btn">Groups</button></a></li>
+        <li><a href="auth/logout.php"><button class="btn">Logout</button></a></li>
     </ul>
 </nav>
 
@@ -289,7 +289,7 @@ $expenses = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
       <h4 style="margin-top: 25px;">Add Expense</h4>
 
-      <form method="post" action="/expenses.php" style="margin-top: 10px;">
+      <form method="post" action="expenses.php" style="margin-top: 10px;">
         <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($_SESSION['csrf_token']); ?>">
         <input type="hidden" name="action" value="add_expense">
 
@@ -333,7 +333,7 @@ $expenses = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     <!-- RIGHT: Recent Expenses -->
       <h4 style="margin-top: 25px;">Recent Expenses</h4>
-      <p style="margin-top: 10px;"><a href="/dashboard.php">Back to dashboard</a></p>
+      <p style="margin-top: 10px;"><a href="dashboard.php">Back to dashboard</a></p>
 
 
       <?php if (empty($expenses)): ?>
@@ -363,7 +363,7 @@ $expenses = $stmt->fetchAll(PDO::FETCH_ASSOC);
                   <td style="text-align:right; white-space:nowrap;">
                     <?php $can_delete = ((int)$e['created_by_id'] === $user_id) || $is_owner; ?>
                     <?php if ($can_delete): ?>
-                      <form method="post" action="/expenses.php" style="display:inline;">
+                      <form method="post" action="expenses.php" style="display:inline;">
                         <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($_SESSION['csrf_token']); ?>">
                         <input type="hidden" name="action" value="delete_expense">
                         <input type="hidden" name="expense_id" value="<?php echo (int)$e['id']; ?>">
@@ -388,6 +388,6 @@ $expenses = $stmt->fetchAll(PDO::FETCH_ASSOC);
     </div>
 </footer>
 
-<script src="/assets/pageCustomization.js"></script>
+<script src="assets/pageCustomization.js"></script>
 </body>
 </html>
