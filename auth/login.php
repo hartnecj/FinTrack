@@ -3,7 +3,7 @@ session_start();
 require_once __DIR__ . '/../config/db.php';
 
 if (!empty($_SESSION['user_id'])) {
-    header('Location: /dashboard.php');
+    header("Location: " . BASE_PATH . "/dashboard.php"); // base path added
     exit;
 }
 
@@ -27,7 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_SESSION['user_name'] = $user['name'];
             $_SESSION['user_email'] = $user['email'];
 
-            header('Location: /dashboard.php');
+            header("Location: " . BASE_PATH . "/dashboard.php");
             exit;
         }
     }
@@ -50,11 +50,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   </head><!-- end head tag -->
   <body>
 
-   <nav><!-- navigation section -->
+   <nav><!-- navigation section (base_path)-->
       <ul>
-        <li><a href="/landing.php"><button class="btn page-btn">Home</button></a></li>
-        <li><a href="#"><button class="btn page-btn">Login</button></a></li>
-        <li><a href="/auth/register.php"><button class="btn page-btn">Register</button></a></li>
+        <li><a href="<?= BASE_PATH ?>/landing.php"><button class="btn page-btn">Home</button></a></li>
+        <li><a href="<?= BASE_PATH ?>/auth/login.php"><button class="btn page-btn">Login</button></a></li>
+        <li><a href="<?= BASE_PATH ?>/auth/register.php"><button class="btn page-btn">Register</button></a></li>
       </ul>
     </nav><!-- end navigation-->z
     
@@ -83,7 +83,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </section>
     <!-- end main section -->
     <!-- signup link -->
-    <h6 id="signup"><a href="signup.html">New? Sign up</a></h6>
+    <h6 id="signup"><a href="<?= BASE_PATH ?>/auth/register.php">New? Sign up</a></h6>
     
     <!-- start footer -->
     <footer>

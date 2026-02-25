@@ -65,7 +65,7 @@ if ($group_id <= 0) {
 
     if ($row) {
         $_SESSION["active_group_id"] = (int)$row["id"];
-        header("Location: dashboard.php");
+        header("Location: " . BASE_PATH . "/dashboard.php");
         exit;
     }
 }
@@ -91,7 +91,7 @@ if ($group_id > 0) {
 
     if (!$active_group) {
         unset($_SESSION["active_group_id"]);
-        header("Location: dashboard.php");
+        header("Location: " . BASE_PATH . "/dashboard.php");
         exit;
     }
 }
@@ -152,33 +152,17 @@ if ($group_id > 0 && $active_group) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <!-- NOTE: updated CSS 2/16/26 -->
-    <link rel="stylesheet" href="assets/style.css?v=5">
+    <link rel="stylesheet" href="<?= BASE_PATH ?>/assets/style.css?v=5">
 </head>
-
-<!-- Jordon -->
-<!-- <body class="ft-page">
-<nav>
-    <ul>
-        <li><a href="/"><button class="btn">Home</button></a></li>
-        <li><a href="/dashboard.php"><button class="btn">Dashboard</button></a></li>
-        <li><a href="/budgets.php"><button class="btn">Budgets</button></a></li>
-        <li><a href="/expenses.php"><button class="btn">Expenses</button></a></li>
-        <li><a href="/expenses.php"><button class="btn">Expenses</button></a></li>
-        <li><a href="/groups.php"><button class="btn">Groups</button></a></li>
-        <li><a href="/auth/logout.php"><button class="btn">Logout</button></a></li>
-    </ul>
-</nav> -->
-
-<!-- for local testing only -->
 <body class="ft-page">
 <nav>
     <ul>
-        <li><a href="./"><button class="btn">Home</button></a></li>
-        <li><a href="dashboard.php"><button class="btn">Dashboard</button></a></li>
-        <li><a href="budgets.php"><button class="btn">Budgets</button></a></li>
-        <li><a href="expenses.php"><button class="btn">Expenses</button></a></li>
-        <li><a href="groups.php"><button class="btn">Groups</button></a></li>
-        <li><a href="auth/logout.php"><button class="btn">Logout</button></a></li>
+        <li><a href="<?= BASE_PATH ?>/"><button class="btn">Home</button></a></li>
+        <li><a href="<?= BASE_PATH ?>/dashboard.php"><button class="btn">Dashboard</button></a></li>
+        <li><a href="<?= BASE_PATH ?>/budgets.php"><button class="btn">Budgets</button></a></li>
+        <li><a href="<?= BASE_PATH ?>/expenses.php"><button class="btn">Expenses</button></a></li>
+        <li><a href="<?= BASE_PATH ?>/groups.php"><button class="btn">Groups</button></a></li>
+        <li><a href="<?= BASE_PATH ?>/auth/logout.php"><button class="btn">Logout</button></a></li>
     </ul>
 </nav>
 
@@ -194,9 +178,9 @@ if ($group_id > 0 && $active_group) {
             </div>
 
             <div class="d-grid gap-2" style="max-width: 300px; margin: 20px auto;">
-                <a href="groups.php"><button class="btn w-100">Go to Groups</button></a>
-                <a href="expenses.php"><button class="btn w-100">Expenses</button></a>
-                <a href="budgets.php"><button class="btn w-100">Budgets</button></a>
+                <a href="<?= BASE_PATH ?>/groups.php"><button class="btn w-100">Go to Groups</button></a>
+                <a href="<?= BASE_PATH ?>/expenses.php"><button class="btn w-100">Expenses</button></a>
+                <a href="<?= BASE_PATH ?>/budgets.php"><button class="btn w-100">Budgets</button></a>
             </div>
 
         <?php else: ?>
@@ -236,9 +220,9 @@ if ($group_id > 0 && $active_group) {
                         <div class="card-body">
                             <h5 class="card-title">Quick Actions</h5>
                             <div class="d-grid gap-2">
-                                <a href="expenses.php"><button class="btn w-100">Add Expense</button></a>
-                                <a href="budgets.php"><button class="btn w-100">Create Budget</button></a>
-                                <a href="groups.php"><button class="btn w-100">Manage Groups</button></a>
+                                <a href="<?= BASE_PATH ?>/expenses.php"><button class="btn w-100">Add Expense</button></a>
+                                <a href="<?= BASE_PATH ?>/budgets.php"><button class="btn w-100">Create Budget</button></a>
+                                <a href="<?= BASE_PATH ?>/groups.php"><button class="btn w-100">Manage Groups</button></a>
                             </div>
                         </div>
                     </div>
@@ -333,7 +317,7 @@ if ($group_id > 0 && $active_group) {
   const range = "30d";
 
   // Pull grouped category totals from JSON endpoint
-  fetch(`expenses_pie_chart.php?range=${encodeURIComponent(range)}`)
+  fetch(`<?= BASE_PATH ?>/backend/expenses_pie_chart.php?range=${encodeURIComponent(range)}`)
     .then((res) => res.json())
     .then((data) => {
       // Endpoint-level error (ex: no active group, server error)
@@ -412,6 +396,6 @@ if ($group_id > 0 && $active_group) {
 // pie chart script end
 </script>
 
-<script src="assets/pageCustomization.js"></script>
+<script src="<?= BASE_PATH ?>/assets/pageCustomization.js"></script>
 </body>
 </html>

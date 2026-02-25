@@ -1,8 +1,9 @@
 <?php
 session_start();
+require_once __DIR__ . "/config/db.php"; // changed BASE_PATH
 
 if (!empty($_SESSION['user_id'])) {
-    header('Location: dashboard.php');
+    header("Location: " . BASE_PATH . "/dashboard.php"); // changed for base path
     exit;
 }
 ?>
@@ -18,15 +19,15 @@ if (!empty($_SESSION['user_id'])) {
     <script src="https://code.jquery.com/jquery-4.0.0.js" integrity="sha256-9fsHeVnKBvqh3FB2HYu7g2xseAZ5MlN6Kz/qnkASV8U=" crossorigin="anonymous"></script>
     <!-- meta viewport tag -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="assets/style.css">
+    <link rel="stylesheet" href="<?= BASE_PATH ?>/assets/style.css?v=5"> <!-- changed for base path -->
   </head>
   <body>
     
     <nav><!-- navigation section -->
       <ul>
-        <li><a href="landing.php"><button class="btn">Home</button></a></li>
-        <li><a href="auth/login.php"><button class="btn">Login</button></a></li>
-        <li><a href="auth/register.php"><button class="btn">Sign Up</button></a></li>
+        <li><a href="<?= BASE_PATH ?>/landing.php"><button class="btn">Home</button></a></li>
+        <li><a href="<?= BASE_PATH ?>/auth/login.php"><button class="btn">Login</button></a></li>
+        <li><a href="<?= BASE_PATH ?>/auth/register.php"><button class="btn">Sign Up</button></a></li>
       </ul>
     </nav><!-- end navigation-->
 
@@ -44,7 +45,7 @@ if (!empty($_SESSION['user_id'])) {
               <div class="col text-center carousel-text text-overlay">
                 <h2> Welcome To FinTrac </h2>
                 <h5 class="text-muted">A shared financial tracking tool for groups</h5>
-                <a href="/auth/login.php"><button>Log in</button></a>
+                <a href="<?= BASE_PATH ?>/auth/login.php"> <button>Log in</button></a>
               </div>
             </div>  
           </div><!-- end carousel item 1 -->
@@ -54,7 +55,7 @@ if (!empty($_SESSION['user_id'])) {
               <div class="col text-center carousel-text text-overlay">
                 <h2> Welcome To FinTrac </h2>
                 <h5 class="text-muted">Log In Now</h5>
-                <a href="/auth/login.php"><button>Log in</button></a>
+                <a href="<?= BASE_PATH ?>/auth/login.php"><button>Log in</button></a>
               </div>
             </div>
           </div><!-- end carousel-item 2 -->
@@ -65,7 +66,7 @@ if (!empty($_SESSION['user_id'])) {
               <div class="col text-center carousel-text text-overlay">
                 <h2> Welcome To FinTrac </h2>
                 <h5 class="text-muted">Keep Track of Group expenses conveniently</h5>
-                <a href="/auth/login.php"><button>Log in</button></a>
+                <a href="<?= BASE_PATH ?>/auth/login.php"><button>Log in</button></a>
               </div>
             </div>
           </div><!-- end carousel-item 3 -->
@@ -90,7 +91,7 @@ if (!empty($_SESSION['user_id'])) {
               <div class="card-body">
                 <h5 class="card-title">Free Signup</h5>
                 <p class="card-text">Register to start tracking budgets</p>
-                <a href="/auth/register.php"><button class="btn-btn-primary">Register</button></a>
+                <a href="<?= BASE_PATH ?>/auth/register.php"><button class="btn-btn-primary">Register</button></a>
               </div>
             </div><!-- end card 1 -->
           </div>
@@ -101,7 +102,7 @@ if (!empty($_SESSION['user_id'])) {
               <div class="card-body">
                 <h5 class="card-title">Connect with groups</h5>
                 <p class="card-text">Groups and shared budget features</p>
-                <a href="/auth/login.php"><button class="btn-btn-primary">Log in</button></a>
+                <a href="<?= BASE_PATH ?>/auth/login.php"><button class="btn-btn-primary">Log in</button></a>
               </div>
             </div><!-- end card 2 -->
           </div>
@@ -112,7 +113,7 @@ if (!empty($_SESSION['user_id'])) {
               <div class="card-body">
                 <h5 class="card-title">Budgets</h5>
                 <p class="card-text">Visualize spending</p>
-                <a href="/auth/login.php"><button class="btn-btn-primary">Log in</button></a>
+                <a href="<?= BASE_PATH ?>/auth/login.php"><button class="btn-btn-primary">Log in</button></a>
               </div>
             </div><!-- end card 3 -->
           </div>
@@ -132,14 +133,6 @@ if (!empty($_SESSION['user_id'])) {
     <!-- link to external JS file-->
 
 
-<<<<<<< HEAD
-    <script src="assets/pageCustomization.js"></script>
+    <script src="<?= BASE_PATH ?>/assets/pageCustomization.js"></script>
   </body>
 </html>
-=======
-    <script src="/assets/pageCustomization.js"></script>
-
-    
-  </body><!-- end body tag -->
-</html><!-- end HTML tag -->
->>>>>>> 65cda8c49208e45af1f08047f631f22324bd51c2
