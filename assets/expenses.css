@@ -1,0 +1,281 @@
+/* =========================================
+   Expenses – NEW layout (Two-panel)
+   Completely different from your old styles
+   ========================================= */
+
+.expenses-page{
+  min-height: 100vh;
+  color: #eaf0ff;
+  background:
+    radial-gradient(900px 600px at 20% 15%, rgba(120, 180, 255, .18), transparent 55%),
+    radial-gradient(900px 600px at 85% 25%, rgba(255, 120, 200, .14), transparent 55%),
+    linear-gradient(180deg, #070913, #070913);
+  position: relative;
+}
+
+/* subtle grid overlay */
+.expenses-page::before{
+  content:"";
+  position: fixed;
+  inset: 0;
+  pointer-events:none;
+  background-image:
+    linear-gradient(rgba(255,255,255,.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.04) 1px, transparent 1px);
+  background-size: 36px 36px;
+  opacity: .35;
+}
+
+/* nav gets a darker treatment */
+.expenses-page nav{
+  background: rgba(8,10,18,0.65) !important;
+  border-bottom: 1px solid rgba(255,255,255,0.10);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.expenses-page nav ul{
+  list-style: none;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  padding: 14px 10px;
+  margin: 0;
+  flex-wrap: wrap;
+}
+
+.expenses-page nav .btn{
+  background: rgba(255,255,255,0.06) !important;
+  color: #eaf0ff !important;
+  border: 1px solid rgba(255,255,255,0.12) !important;
+  border-radius: 12px !important;
+  padding: 8px 14px !important;
+  transition: transform .12s ease, background .2s ease, border-color .2s ease;
+}
+.expenses-page nav .btn:hover{
+  background: rgba(255,255,255,0.10) !important;
+  border-color: rgba(255,255,255,0.18) !important;
+  transform: translateY(-1px);
+}
+
+/* page shell */
+.expenses-shell{
+  padding: 34px 16px 70px;
+  position: relative;
+  z-index: 1;
+}
+
+.expenses-grid{
+  width: min(1200px, 100%);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 380px 1fr;
+  gap: 18px;
+}
+
+/* responsive: stack */
+@media (max-width: 980px){
+  .expenses-grid{
+    grid-template-columns: 1fr;
+  }
+  .panel-form{
+    position: static !important;
+  }
+}
+
+/* panels */
+.panel{
+  border-radius: 16px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.12);
+  box-shadow: 0 18px 55px rgba(0,0,0,0.45);
+}
+
+/* left panel sticky */
+.panel-form{
+  padding: 18px 18px 20px;
+  position: sticky;
+  top: 90px;
+  align-self: start;
+}
+
+.panel-table{
+  padding: 18px 18px 16px;
+}
+
+/* headings */
+.page-title{
+  font-size: 32px;
+  font-weight: 800;
+  letter-spacing: -0.4px;
+  margin: 2px 0 2px;
+}
+
+.subtle{
+  margin: 0 0 12px;
+  opacity: .85;
+}
+
+.section-title{
+  font-weight: 750;
+  margin: 14px 0 10px;
+}
+
+/* alerts look nicer on dark */
+.expenses-page .alert{
+  border-radius: 14px;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.14);
+  color: #eef2ff;
+}
+
+/* form */
+.ft-form .form-label{
+  font-size: 12px;
+  font-weight: 700;
+  color: rgba(234,240,255,0.78);
+  margin-bottom: 6px;
+}
+
+/* inputs */
+.ft-input{
+  background: rgba(10,12,20,0.65) !important;
+  border: 1px solid rgba(255,255,255,0.14) !important;
+  color: #eef2ff !important;
+  border-radius: 12px !important;
+  padding: 10px 12px !important;
+}
+
+.ft-input::placeholder{
+  color: rgba(234,240,255,0.45);
+}
+
+.ft-input:focus{
+  border-color: rgba(120,180,255,0.55) !important;
+  box-shadow: 0 0 0 4px rgba(120,180,255,0.16) !important;
+}
+
+/* buttons */
+.ft-primary{
+  width: 100%;
+  border-radius: 12px !important;
+  padding: 11px 14px !important;
+  font-weight: 800 !important;
+  border: 1px solid rgba(255,255,255,0.14) !important;
+  background: linear-gradient(90deg, rgba(120,180,255,.25), rgba(255,120,200,.18)) !important;
+  color: #f7f9ff !important;
+}
+
+.ft-primary:hover{
+  filter: brightness(1.07);
+}
+
+.ft-danger{
+  border-radius: 10px !important;
+  border: 1px solid rgba(255,255,255,0.14) !important;
+  background: rgba(255,80,120,0.22) !important;
+  color: #fff !important;
+}
+.ft-danger:hover{
+  background: rgba(255,80,120,0.30) !important;
+}
+
+/* right panel head */
+.panel-head{
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.ft-link{
+  color: rgba(234,240,255,0.75);
+  text-decoration: none;
+  font-weight: 650;
+}
+.ft-link:hover{
+  color: rgba(234,240,255,0.95);
+  text-decoration: underline;
+}
+
+.empty{
+  opacity: .85;
+  margin: 10px 0 0;
+}
+
+/* table wrapper */
+.table-wrap{
+  width: 100%;
+  overflow: auto;
+  border-radius: 14px;
+  border: 1px solid rgba(255,255,255,0.10);
+}
+
+/* table */
+.ft-table{
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  min-width: 760px;
+  background: rgba(10,12,20,0.35);
+}
+
+.ft-table thead th{
+  position: sticky;
+  top: 0;
+  background: rgba(8,10,18,0.85);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: rgba(234,240,255,0.78);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 12px 12px;
+  border-bottom: 1px solid rgba(255,255,255,0.10);
+}
+
+.ft-table tbody td{
+  padding: 12px 12px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  color: rgba(234,240,255,0.92);
+  font-size: 14px;
+}
+
+.ft-table tbody tr:hover td{
+  background: rgba(255,255,255,0.05);
+}
+
+.cell-actions{
+  text-align: right;
+  white-space: nowrap;
+}
+
+/* footer stays subtle */
+.expenses-page footer{
+  background: transparent;
+  color: rgba(234,240,255,0.7);
+}
+/* Prevent the global light-mode toggle from changing Expenses styling */
+body.expenses-page.light-mode,
+body.light-mode.expenses-page,
+body.expenses-page[data-theme="light"] {
+  color: #eaf0ff !important;
+}
+
+/* If your script changes backgrounds or cards */
+body.expenses-page.light-mode .panel,
+body.light-mode.expenses-page .panel,
+body.expenses-page[data-theme="light"] .panel {
+  background: rgba(255,255,255,0.06) !important;
+  border: 1px solid rgba(255,255,255,0.12) !important;
+}
+
+body.expenses-page.light-mode .ft-input,
+body.light-mode.expenses-page .ft-input,
+body.expenses-page[data-theme="light"] .ft-input {
+  background: rgba(10,12,20,0.65) !important;
+  color: #eef2ff !important;
+  border: 1px solid rgba(255,255,255,0.14) !important;
+}
+

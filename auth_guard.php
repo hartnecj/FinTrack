@@ -14,11 +14,9 @@
 |--------------------------------------------------------------------------
 */
 
-require_once __DIR__ . "/config/db.php"; //  BASE_PATH exists
-
-if (session_status() === PHP_SESSION_NONE) { // base path
+if (session_status() === PHP_SESSION_NONE) {
     session_start();
-} 
+}
 
 // CSRF token is used to protect POST requests from forged submissions.
 // This gets created once per session.
@@ -26,8 +24,8 @@ if (empty($_SESSION['csrf_token'])) {
     $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
 }
 
+// If not logged in, send user to our actual login page.
 if (empty($_SESSION["user_id"])) {
-    header("Location: " . BASE_PATH . "/auth/login.php");  // base path added
+    header("Location: /auth/login.php");
     exit;
 }
-

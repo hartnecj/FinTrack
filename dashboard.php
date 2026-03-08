@@ -162,6 +162,7 @@ if ($group_id > 0 && $active_group) {
         <li><a href="<?= BASE_PATH ?>/budgets.php"><button class="btn">Budgets</button></a></li>
         <li><a href="<?= BASE_PATH ?>/expenses.php"><button class="btn">Expenses</button></a></li>
         <li><a href="<?= BASE_PATH ?>/groups.php"><button class="btn">Groups</button></a></li>
+        <li><a href="<?= BASE_PATH ?>/messages.php"><button class="btn">Messages</button></a></li>
         <li><a href="<?= BASE_PATH ?>/auth/logout.php"><button class="btn">Logout</button></a></li>
     </ul>
 </nav>
@@ -317,7 +318,7 @@ if ($group_id > 0 && $active_group) {
   const range = "30d";
 
   // Pull grouped category totals from JSON endpoint
-  fetch(`<?= BASE_PATH ?>/backend/expenses_pie_chart.php?range=${encodeURIComponent(range)}`)
+  fetch(`<?= BASE_PATH ?>/expenses_pie_chart.php?range=${encodeURIComponent(range)}`)
     .then((res) => res.json())
     .then((data) => {
       // Endpoint-level error (ex: no active group, server error)

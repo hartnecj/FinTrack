@@ -3,7 +3,7 @@ session_start();
 require_once __DIR__ . '/../config/db.php';
 
 if (!empty($_SESSION['user_id'])) {
-    header("Location: " . BASE_PATH . "/dashboard.php"); // base path added
+    header('Location: /dashboard.php');
     exit;
 }
 
@@ -33,7 +33,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt = $pdo->prepare('INSERT INTO users (name, email, password_hash) VALUES (?, ?, ?)');
             $stmt->execute([$name, $email, $hash]);
 
-            header("Location: " . BASE_PATH . "/auth/login.php"); // base path added
+            header('Location: /auth/login.php');
             exit;
         }
     }
@@ -59,9 +59,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       
     <nav><!-- navigation section -->
       <ul>
-        <li><a href="<?= BASE_PATH ?>/landing.php"><button class="btn page-btn">Home</button></a></li>
-        <li><a href="<?= BASE_PATH ?>/auth/login.php"><button class="btn page-btn">Login</button></a></li>
-        <li><a href="<?= BASE_PATH ?>/auth/register.php"><button class="btn page-btn">Register</button></a></li>
+        <li><a href="../landing.php"><button class="btn page-btn">Home</button></a></li>
+        <li><a href="/auth/login.php"><button class="btn page-btn">Login</button></a></li>
+        <li><a href="#"><button class="btn page-btn">Register</button></a></li>
       </ul>
     </nav><!-- end navigation-->
 

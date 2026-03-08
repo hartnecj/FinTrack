@@ -1,0 +1,274 @@
+/* -------------C S S  V A R I A B L E S --------------*/
+
+/* root css variables */
+:root{
+  --bg-color:                       rgba(145,182,235, 0.8);
+  --text-color:                                      white;
+  --focus-color:                                      blue;
+  --div-color:                       rgba(66,143,242, 0.8);
+  --link-color:                                      white;
+  --border-color:                 rgba(255, 255, 255, 0.5);
+  --btn-color:                       #CCCFDC;
+  --bg-image: linear-gradient(to bottom, #021152, #E4DECE);
+  --btn-hover-color:                  rgba(66,143,242, .5);
+}
+
+/* darkMode css variables */
+.darkMode{
+  --bg-color:                                      #121212;
+  --text-color:                                      black;
+  --focus-color:                                   #888888;
+  --div-color:                                     #444444;
+  --link-color:                                      black;
+  --signup-color:                                    white;
+  --btn-color:                                     #121212;
+  --btn-hover-color:                                      ;
+}
+
+/* light mode css variables */
+.lightMode{
+  --bg-color:                       rgba(145,182,235, 0.8);
+  --text-color:                                      white;
+  --focus-color:                                      blue;
+  --div-color:                       rgba(66,143,242, 0.8);
+  --link-color:                                      white;
+  --signup-color:                                    white;
+  --border-color:                     rgba(0, 8, 103, 0.8);
+  --btn-color:                        #CCCFDC;
+  --btn-hover-color: ;
+}
+
+/*--------- E N D  C S S  V A R I A B L E S ----------*/
+
+body{
+  margin:                                                0;
+  background-image:                        var(--bg-image);
+  background-color:                        var(--bg-color);
+  color:                                 var(--text-color);
+  background-size:                                   cover;
+  background-repeat:                             no-repeat;
+  min-height:                                        100vh;
+}
+
+/* the hero/main section of the page */
+.main-container{
+  width:                                               70%;
+  border-radius:                                      10px;
+  margin:                                             auto;
+  margin-top:                                         15vh;
+  text-align:                                       center;
+  -webkit-box-shadow:     3px 6px 17px 6px rgba(0,0,0,0.7); 
+  box-shadow:             3px 6px 17px 6px rgba(0,0,0,0.7);
+}
+
+/* shared styles between the navigation and footer */
+nav, footer{
+  position:                                          fixed;
+  width:                                              100%;
+  background-color:                       var(--div-color);
+  -webkit-box-shadow:     3px 6px 17px 6px rgba(0,0,0,0.1); 
+  box-shadow:             3px 6px 17px 6px rgba(0,0,0,0.1);
+}
+
+/* styles around the list items in the nav */
+nav > ul{
+  height:                                              7vh;
+  display:                                            flex;
+  max-width:                                          100%;
+  justify-content:                            space-around;
+  align-items:                                      center;
+  padding:                                             1vh;
+}
+
+/* each list item in the navigation bar */
+nav > ul > li {
+  padding-left:                                         4%;
+  padding-right:                                        2%;
+  list-style-type:                                    none;
+}
+
+/* button tag styling */
+button{
+  color:                                 var(--link-color);
+  text-decoration:                                    none;
+  padding:                                             5px;
+  border:                    1px solid var(--border-color);
+  border-radius:                                      10px;
+  background-color:                       var(--btn-color);
+}
+
+/* on hover specific button styling */
+button:hover{
+  background-color:                 var(--btn-hover-color);
+}
+
+/* input box class styling */
+.input-box{
+  padding:                                              5%;
+}
+
+/* section tag styling */
+section{
+  background-color:                       var(--div-color);
+  margin-top:                                         10vh;
+}
+
+/* footer specific styling */
+footer{
+  bottom:                                                0;
+}
+
+nav{
+  top:                                                   0;
+  z-index:                                               1;
+}
+/* styling for every child element of the footer tag */
+footer > *{
+  padding-left:                                         4%;
+  padding-right:                                        2%;
+}
+/* dark mode toggle styling */
+#styleSwitch{
+  background-color:                          var(--btn-bg);
+}
+
+form{
+  padding:                                              5%;
+}
+
+input{
+  background-color:                       rgba(0, 0, 0, 0);
+}
+
+#login-btn{
+  color:                                 var(--text-color);
+  font-weight:                                         400;
+  border-radius:                                      10px;
+}
+
+#signup{
+  text-align:                                       center;
+  margin-top:                                          1vh;
+}
+
+h6 > a{
+  color:                               var(--signup-color);
+  text-decoration:                                    none;
+}
+
+#first-name, .input-label{
+  margin-right:                                       15px;
+}
+
+.left-input-label{
+  margin-left:                                        15px;
+}
+
+#image-1, #image-2, #image-3{
+  width:                                              100%;
+  height:                                             80vh;
+  background-image:                 url('https://maryrei.codewizardshq.com/CapstoneCSP/images/img1.JPG');
+  background-size:                                   cover;
+  background-repeat:                             no-repeat;
+  background-position:                              center;
+}
+
+.cards-section{
+  margin:                                             auto; 
+  margin-bottom:                                      10vh;
+  width:                                               70%;   
+  background-color:                            transparent;
+  display:                                            flex;
+  justify-content:                           space-between;
+}
+
+#image-2{
+  background-image:                 url('https://maryrei.codewizardshq.com/CapstoneCSP/images/img2.JPG');
+}
+
+#image-3{
+  background-image:                 url('https://maryrei.codewizardshq.com/CapstoneCSP/images/img3.JPG');
+}
+
+.card-title{
+  margin-top:                                          5vh;
+}
+
+.card > *{
+  color:                                             black;
+}
+
+.text-overlay{
+  text-align:                                       center;
+  background-color:                    rgba(0, 0, 0, 0.75);
+  width:                                              25vh;
+  padding:                                            10px;
+}
+
+.card{
+  margin:                                             auto;
+  
+}
+
+.col{
+  margin-bottom:                                        5%;
+}
+
+.page-btn{
+  background-color:                      var(--btn--color);
+}
+/*------ P A G E  S P E C I F I C  S T Y L I N G ------*/
+
+/* home specific css styling */
+.main-container-home{
+  width:                                               90%;
+  height:                                             80vh;
+}
+
+/* dashboard specific css styling */
+.main-container-dashboard{
+  padding:                                            10vh;
+  height:                                      fit-content;
+}
+
+/*--- R E S P O N S I V E  M E D I A  Q U E R I E S ---*/
+
+/*media query for screens over 900 px wide*/
+@media (min-width: 900px){
+  .main-container{
+    width:                                             30%;
+  }
+  
+  nav > ul{
+    height:                                            5vh;
+    display:                                          flex;
+    max-width:                                        100%;
+    justify-content:                                   end;
+    align-items:                                    center;
+  }
+
+  nav > ul > li {
+    padding-left:                                       4%;
+    padding-right:                                      2%;
+    list-style-type:                                  none;
+  }
+
+  button{
+    color:                               var(--link-color);
+    text-decoration:                                  none;
+    padding:                                           5px;
+    border:                  1px solid var(--border-color);
+    border-radius                                     10px;
+    background-color:                     var(--btn-color);
+    width:                                           100px;
+  }
+
+  button:hover{
+    background-color:               var(--btn-hover-color);
+  }
+  
+  .main-container-home{
+    width:                                             90%;
+  }
+  
+}/* end 900px minimum media query*/

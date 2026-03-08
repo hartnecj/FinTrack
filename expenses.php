@@ -267,6 +267,7 @@ $expenses = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <li><a href="<?= BASE_PATH ?>/budgets.php"><button class="btn">Budgets</button></a></li>
         <li><a href="<?= BASE_PATH ?>/expenses.php"><button class="btn">Expenses</button></a></li>
         <li><a href="<?= BASE_PATH ?>/groups.php"><button class="btn">Groups</button></a></li>
+        <li><a href="<?= BASE_PATH ?>/messages.php"><button class="btn">Messages</button></a></li>
         <li><a href="<?= BASE_PATH ?>/auth/logout.php"><button class="btn">Logout</button></a></li>
     </ul>
 </nav>
