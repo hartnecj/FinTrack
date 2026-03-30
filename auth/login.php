@@ -46,9 +46,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <!-- meta viewport tag -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- link to stylesheet -->
-    <link rel="stylesheet" href="../assets/landingStyles.css">
+    <link rel="stylesheet" href="/assets/style.css">
   </head><!-- end head tag -->
-  <body>
+  <body class="ft-page">
 
    <nav><!-- navigation section -->
       <ul>
@@ -59,7 +59,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </nav><!-- end navigation-->z
     
     <!-- main section -->
-    <section class="main-container shadow-lg">
+    <section class="main-container shadow-lg p-5">
       <!-- start form tag -->
       <form method="POST" action="">
         <fieldset class="form-group">
@@ -74,8 +74,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           <div class="mb-3 input-group">
             <input type="password" id="password" name="password" class="form-control" aria-label="Password input" aria-description="password-input box for entering password"required>
           </div>
-          <!-- forgot password link -->
-          <h6><a href="#">Forgot password?</a></h6>
+          <!-- forgot password link 
+          <h6 class="text-center"><a href="#">Forgot password?</a></h6> -->
         </fieldset>
         <!-- submit button -->
         <input type="submit" class="btn" value="Login" id="login-btn">
@@ -83,7 +83,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </section>
     <!-- end main section -->
     <!-- signup link -->
-    <h6 id="signup"><a href="signup.html">New? Sign up</a></h6>
+    <h6 id="signup" class="text-center"><a href="/auth/register.php">New? Sign up</a></h6>
     
     <!-- start footer -->
     <footer>
