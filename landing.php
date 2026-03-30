@@ -1,10 +1,13 @@
 <?php
 session_start();
 
+define('BASE_PATH', '');
+
 if (!empty($_SESSION['user_id'])) {
     header('Location: /dashboard.php');
     exit;
 }
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -19,17 +22,17 @@ if (!empty($_SESSION['user_id'])) {
     <!-- meta viewport tag -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- link to style.css -->
-    <link rel="stylesheet" href="/assets/landingStyles.css">
+    <link rel="stylesheet" href="/testCopy/assets/style.css?v=5">
     <!-- bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
   </head><!-- end head tag -->
-  <body>
+  <body class="ft-page">
     
     <nav><!-- navigation section -->
       <ul>
-        <li><a href="/landing.php"><button class="btn page-btn">Home</button></a></li>
-        <li><a href="/auth/login.php"><button class="btn page-btn">Login</button></a></li>
-        <li><a href="/auth/register.php"><button class="btn page-btn">Register</button></a></li>
+        <li><a href="<?= BASE_PATH ?>/landing.php"><button class="btn page-btn">Home</button></a></li>
+        <li><a href="<?= BASE_PATH ?>/login.php"><button class="btn page-btn">Login</button></a></li>
+        <li><a href="<?= BASE_PATH ?>/auth/register.php"><button class="btn page-btn">Register</button></a></li>
       </ul>
     </nav><!-- end navigation-->
 
