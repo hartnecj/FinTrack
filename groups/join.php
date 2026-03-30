@@ -84,10 +84,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <script src="https://code.jquery.com/jquery-4.0.0.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <!-- NOTE: Corrected path to match actual project structure -->
+    <!-- NOTE: updated CSS 3/30/26 -->
     <link rel="stylesheet" href="/assets/style.css">
 </head>
-<body>
+<body class="ft-page">
 <nav>
     <ul>
         <li><a href="/"><button class="btn">Home</button></a></li>
@@ -134,7 +134,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
 </footer>
 
-<!-- NOTE: Corrected path to match actual project structure -->
-<script src="/assets/pageCustomization.js"></script>
+<!-- NOTE: Corrected path to match actual project structure
+//<script src="/assets/pageCustomization.js"></script> -->
 </body>
 </html>
