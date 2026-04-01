@@ -36,7 +36,7 @@ $active_group = null;
 
 // Dashboard metrics (defaults)
 $month_total = 0.00;
-$last30_total = 0.00;
+$last180_total = 0.00;
 $month_count = 0;
 $recent_expenses = [];
 
@@ -118,17 +118,17 @@ if ($group_id > 0 && $active_group) {
     $month_total = (float)($row['total'] ?? 0);
     $month_count = (int)($row['cnt'] ?? 0);
 
-    // Last 30 days total
+    // Last 180 days total
     $stmt = $pdo->prepare("
         SELECT COALESCE(SUM(amount), 0) AS total
         FROM expenses
         WHERE group_id = ?
-          AND expense_date >= DATE_SUB(CURDATE(), INTERVAL 30 DAY)
+          AND expense_date >= DATE_SUB(CURDATE(), INTERVAL 180 DAY)
           AND expense_date <= CURDATE()
     ");
     $stmt->execute([$group_id]);
     $row = $stmt->fetch(PDO::FETCH_ASSOC);
-    $last30_total = (float)($row['total'] ?? 0);
+    $last180_total = (float)($row['total'] ?? 0);
 
     // Recent expenses (top 5)
     $stmt = $pdo->prepare("
@@ -207,9 +207,9 @@ if ($group_id > 0 && $active_group) {
                 <div class="col-md-4 mb-3">
                     <div class="card shadow-sm">
                         <div class="card-body">
-                            <h5 class="card-title">Last 30 Days</h5>
+                            <h5 class="card-title">Last 180 Days</h5>
                             <p class="card-text" style="font-size: 1.4rem;">
-                                $<?php echo htmlspecialchars(number_format($last30_total, 2)); ?>
+                                $<?php echo htmlspecialchars(number_format($last180_total, 2)); ?>
                             </p>
                             <p class="card-text"><small>Rolling total</small></p>
                         </div>
@@ -238,7 +238,7 @@ if ($group_id > 0 && $active_group) {
                             <div class="d-flex justify-content-between align-items-start">
                                 <div>
                                     <h5 class="card-title mb-1">Spending Breakdown</h5>
-                                    <small class="text-muted">Last 30 days</small>
+                                    <small class="text-muted">Last 6 months</small>
                                 </div>
                                 <div class="text-end">
                                     <small class="text-muted">Total</small>
@@ -315,10 +315,11 @@ if ($group_id > 0 && $active_group) {
   const emptyEl = document.getElementById("ftPieEmptyState");
 
   // Default timeframe for the dashboard chart
-  const range = "30d";
+  const range = "180d";
 
   // Pull grouped category totals from JSON endpoint
-  fetch(`<?= BASE_PATH ?>/expenses_pie_chart.php?range=${encodeURIComponent(range)}`)
+  // NOTE: changed path so it works on testing pages and main page
+    fetch(`<?= BASE_PATH ?>/backend/expenses_pie_chart.php?range=${encodeURIComponent(range)}`)
     .then((res) => res.json())
     .then((data) => {
       // Endpoint-level error (ex: no active group, server error)

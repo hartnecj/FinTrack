@@ -258,7 +258,7 @@ h6 > a{
     text-decoration:                                  none;
     padding:                                           5px;
     border:                  1px solid var(--border-color);
-    border-radius                                     10px;
+    border-radius:                                     10px;
     background-color:                     var(--btn-color);
     width:                                           100px;
   }

@@ -219,19 +219,20 @@ if ($active_group) {
     <script src="https://code.jquery.com/jquery-4.0.0.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <!-- NOTE: Corrected path to match actual project structure -->
-    <link rel="stylesheet" href="/assets/style.css?v=5">
+    <!-- NOTE: changed path so it works on testing pages and main page -->
+    <link rel="stylesheet" href="<?= BASE_PATH ?>/assets/style.css?v=5">
 </head>
 <body class="ft-page">
 <nav>
     <ul>
-        <li><a href="/"><button class="btn">Home</button></a></li>
-        <li><a href="/dashboard.php"><button class="btn">Dashboard</button></a></li>
-        <li><a href="/budgets.php"><button class="btn">Budgets</button></a></li>
-        <li><a href="/expenses.php"><button class="btn">Expenses</button></a></li>
-        <li><a href="/groups.php"><button class="btn">Groups</button></a></li>
+        <!-- NOTE: changed path so it works on testing pages and main page -->
+        <li><a href="<?= BASE_PATH ?>/"><button class="btn">Home</button></a></li>
+        <li><a href="<?= BASE_PATH ?>/dashboard.php"><button class="btn">Dashboard</button></a></li>
+        <li><a href="<?= BASE_PATH ?>/budgets.php"><button class="btn">Budgets</button></a></li>
+        <li><a href="<?= BASE_PATH ?>/expenses.php"><button class="btn">Expenses</button></a></li>
+        <li><a href="<?= BASE_PATH ?>/groups.php"><button class="btn">Groups</button></a></li>
         <li><a href="<?= BASE_PATH ?>/messages.php"><button class="btn">Messages</button></a></li>
-        <li><a href="/auth/logout.php"><button class="btn">Logout</button></a></li>
+        <li><a href="<?= BASE_PATH ?>/auth/logout.php"><button class="btn">Logout</button></a></li>
     </ul>
 </nav>
 
@@ -251,8 +252,9 @@ if ($active_group) {
             <p>You are not currently in a group.</p>
 
             <div class="d-grid gap-2" style="max-width: 300px; margin: 30px auto;">
-                <a href="/groups/create.php"><button class="btn w-100">Create a Group</button></a>
-                <a href="/groups/join.php"><button class="btn w-100">Join a Group</button></a>
+                <!-- NOTE: changed path so it works on testing pages and main page -->
+                <a href="<?= BASE_PATH ?>/groups/create.php"><button class="btn w-100">Create a Group</button></a>
+                <a href="<?= BASE_PATH ?>/groups/join.php"><button class="btn w-100">Join a Group</button></a>
             </div>
 
         <?php else: ?>
@@ -260,7 +262,8 @@ if ($active_group) {
             <p><strong>Your groups</strong></p>
             <div class="d-grid gap-2" style="max-width: 500px;">
                 <?php foreach ($user_groups as $g): ?>
-                    <form method="post" action="/groups.php" style="margin: 0;">
+                    <!-- NOTE: changed path so it works on testing pages and main page -->
+                    <form method="post" action="<?= BASE_PATH ?>/groups.php" style="margin: 0;">
                         <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($_SESSION['csrf_token']); ?>">
                         <input type="hidden" name="action" value="set_active">
                         <input type="hidden" name="group_id" value="<?php echo (int)$g['id']; ?>">
@@ -273,8 +276,9 @@ if ($active_group) {
             </div>
 
             <div style="margin-top: 20px;">
-                <a href="/groups/create.php"><button class="btn">Create another group</button></a>
-                <a href="/groups/join.php"><button class="btn">Join another group</button></a>
+                <!-- NOTE: changed path so it works on testing pages and main page -->
+                <a href="<?= BASE_PATH ?>/groups/create.php"><button class="btn">Create another group</button></a>
+                <a href="<?= BASE_PATH ?>/groups/join.php"><button class="btn">Join another group</button></a>
             </div>
 
             <?php if ($active_group): ?>
@@ -315,7 +319,8 @@ if ($active_group) {
                             <?php if ($is_owner): ?>
                                 <td>
                                     <?php if ((int)$member['id'] !== $user_id): ?>
-                                        <form method="post" action="/groups.php" style="display: inline;">
+                                        <!-- NOTE: changed path so it works on testing pages and main page -->
+                                        <form method="post" action="<?= BASE_PATH ?>/groups.php" style="display: inline;">
                                             <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($_SESSION['csrf_token']); ?>">
                                             <input type="hidden" name="action" value="remove_member">
                                             <input type="hidden" name="group_id" value="<?php echo (int)$active_group['id']; ?>">
@@ -332,14 +337,16 @@ if ($active_group) {
 
                 <div style="margin-top: 30px;">
                     <?php if (!$is_owner): ?>
-                        <form method="post" action="/groups.php" style="display: inline;">
+                        <!-- NOTE: changed path so it works on testing pages and main page -->
+                        <form method="post" action="<?= BASE_PATH ?>/groups.php" style="display: inline;">
                             <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($_SESSION['csrf_token']); ?>">
                             <input type="hidden" name="action" value="leave_group">
                             <input type="hidden" name="group_id" value="<?php echo (int)$active_group['id']; ?>">
                             <button type="submit" class="btn" onclick="return confirm('Leave this group?')">Leave Group</button>
                         </form>
                     <?php else: ?>
-                        <form method="post" action="/groups.php" style="display: inline;">
+                        <!-- NOTE: changed path so it works on testing pages and main page -->
+                        <form method="post" action="<?= BASE_PATH ?>/groups.php" style="display: inline;">
                             <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($_SESSION['csrf_token']); ?>">
                             <input type="hidden" name="action" value="delete_group">
                             <input type="hidden" name="group_id" value="<?php echo (int)$active_group['id']; ?>">
@@ -351,8 +358,8 @@ if ($active_group) {
             <?php endif; ?>
 
         <?php endif; ?>
-
-        <p style="margin-top: 30px;"><a href="/dashboard.php">Back to dashboard</a></p>
+                        <!-- NOTE: changed path so it works on testing pages and main page -->
+        <p style="margin-top: 30px;"><a href="<?= BASE_PATH ?>/dashboard.php">Back to dashboard</a></p>
     </div>
 </section>
 
@@ -363,7 +370,7 @@ if ($active_group) {
     </div>
 </footer>
 
-<!-- NOTE: Corrected path to match actual project structure -->
-<script src="/assets/pageCustomization.js"></script>
+<!-- NOTE: changed path so it works on testing pages and main page -->
+<script src="<?= BASE_PATH ?>/assets/pageCustomization.js"></script>
 </body>
 </html>

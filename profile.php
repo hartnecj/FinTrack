@@ -440,7 +440,8 @@ function edit_profile(){
             <p><strong>Your groups</strong></p>
             <div class="d-grid gap-2" style="max-width: 500px;">
                 <?php foreach ($user_groups as $g): ?>
-                    <form method="post" action="/groups.php" style="margin: 0;">
+                    <!-- NOTE: changed path so it works on testing pages and main page -->
+                    <form method="post" action="<?= BASE_PATH ?>/groups.php" style="margin: 0;">    
                         <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($_SESSION['csrf_token']); ?>">
                         <input type="hidden" name="action" value="set_active">
                         <input type="hidden" name="group_id" value="<?php echo (int)$g['id']; ?>">

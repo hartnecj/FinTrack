@@ -10,10 +10,10 @@ require_once __DIR__ . "/../auth_guard.php";
 require_once __DIR__ . "/../config/db.php";
 
 // Read request
-// - 30d  (default)
+// - 180 days (default)
 // - month (from first day of current month)
 // - all  (no start date)
-$range = $_GET["range"] ?? "30d";
+$range = $_GET["range"] ?? "180d";
 
 // Determine active group (adjust keys if your session uses different names)
 $groupID = $_SESSION["active_group_id"] ?? null;
@@ -28,16 +28,16 @@ if (!$groupID) {
 $endDate = (new DateTimeImmutable("now"))->format("Y-m-d");
 $startDate = null;
 
-if ($range === "30d") {
-  $startDate = (new DateTimeImmutable("now"))->modify("-30 days")->format("Y-m-d");
+if ($range === "180d") {
+  $startDate = (new DateTimeImmutable("now"))->modify("-180 days")->format("Y-m-d");
 } elseif ($range === "month") {
   $startDate = (new DateTimeImmutable("first day of this month"))->format("Y-m-d");
 } elseif ($range === "all") {
   $startDate = null; // fetch all data
 } else {
   // fallback
-  $range = "30d";
-  $startDate = (new DateTimeImmutable("now"))->modify("-30 days")->format("Y-m-d");
+  $range = "180d";
+  $startDate = (new DateTimeImmutable("now"))->modify("-180 days")->format("Y-m-d");
 }
 
 // Query database
