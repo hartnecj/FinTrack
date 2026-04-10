@@ -90,11 +90,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <body class="ft-page">
 <nav>
     <ul>
+        <li id="profile-btn"><a href="<?= BASE_PATH ?>/profile.php"><button class="btn">Profile</button></a></li>
         <li><a href="/"><button class="btn">Home</button></a></li>
         <li><a href="/dashboard.php"><button class="btn">Dashboard</button></a></li>
         <li><a href="/budgets.php"><button class="btn">Budgets</button></a></li>
         <li><a href="/expenses.php"><button class="btn">Expenses</button></a></li>
         <li><a href="/groups.php"><button class="btn">Groups</button></a></li>
+        <li><a href="<?= BASE_PATH ?>/messages.php"><button class="btn">Messages</button></a></li>
         <li><a href="/auth/logout.php"><button class="btn">Logout</button></a></li>
     </ul>
 </nav>

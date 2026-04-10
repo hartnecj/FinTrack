@@ -25,8 +25,7 @@ if (empty($_SESSION['csrf_token'])) {
 }
 
 // If not logged in, send user to our actual login page.
-//  NOTE: changed path so it works on testing pages and main page 
 if (empty($_SESSION["user_id"])) {
-    header("Location: " . BASE_PATH . "/auth/login.php");
+    header("Location: /auth/login.php");
     exit;
 }

@@ -140,6 +140,11 @@ body.ft-page nav ul{
   flex-wrap: wrap;
 }
 
+
+/* this makes the profile button stick to the right */
+#profile-btn{
+    margin-right: auto;
+}
 /*--------- E N D  N A V  &  F O O T E R ----------*/
 
 
@@ -290,6 +295,35 @@ body.ft-page table.table tbody th *{
 }
 
 /*--------- E N D  T A B L E S ----------*/
+
+
+/* carousel styles, Mary added 3/30/26, needed it to keep carousel functionality on landing */
+#image-1, #image-2, #image-3{
+  width:                                              100%;
+  height:                                             80vh;
+  background-image:                 url('https://maryrei.codewizardshq.com/CapstoneCSP/images/img1.JPG');
+  background-size:                                   cover;
+  background-repeat:                             no-repeat;
+  background-position:                              center;
+}
+
+.cards-section{
+  margin:                                             auto; 
+  margin-bottom:                                      10vh;
+  width:                                               70%;   
+  background-color:                            transparent;
+  display:                                            flex;
+  justify-content:                           space-between;
+}
+
+#image-2{
+  background-image:                 url('https://maryrei.codewizardshq.com/CapstoneCSP/images/img2.JPG');
+}
+
+#image-3{
+  background-image:                 url('https://maryrei.codewizardshq.com/CapstoneCSP/images/img3.JPG');
+}
+/* end carousel */
 
 
 /* -------------F O O T E R  T O G G L E --------------*/

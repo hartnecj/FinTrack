@@ -310,6 +310,7 @@ function edit_profile(){
         <!-- navigation section -->
     <nav>
         <ul>
+            <li id="profile-btn"><a href="#"><button class="btn">Profile</button></a></li>
             <li><a href="<?= BASE_PATH ?>/"><button class="btn">Home</button></a></li>
             <li><a href="<?= BASE_PATH ?>/dashboard.php"><button class="btn">Dashboard</button></a></li>
             <li><a href="<?= BASE_PATH ?>/budgets.php"><button class="btn">Budgets</button></a></li>
@@ -387,7 +388,7 @@ function edit_profile(){
                                 <fieldset class="form-group">
           
                                     <!-- name input -->
-                                    <label for="first-name" class="input-label">First Name</label><label for="last-name" class="input-label left-input-label">Last Name</label>
+                                    <label for="first-name" class="input-label">First Name &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; &emsp;</label><label for="last-name" class="input-label left-input-label">Last Name</label>
                                     <div class="mb-3 input-group">
                                         <!-- first name input -->
                                         <input type="text" id="first-name" name="first-name" class="form-control" aria-label="First-Name input" aria-description="first-name input box">
@@ -399,7 +400,7 @@ function edit_profile(){
                                 <!-- submit button/cancel button/hidden input -->
                                 <input type="hidden" name="editing" value="0">
                                 <button type="submit" class="btn w-100" name="edit_profile" id="submit-profile-btn" value="1">Submit</button>
-                                <a href="<?= BASE_PATH ?>/profile.php"><button type="submit" class="btn w-100" formnovalidate>cancel</button></a>
+                                <a href="<?= BASE_PATH ?>/profile.php"><button type="submit" class="btn w-100" formnovalidate>Cancel</button></a>
                             </form>
                             
                             <!-- this is the section that shows if editing is not toggled to true -->
@@ -440,8 +441,7 @@ function edit_profile(){
             <p><strong>Your groups</strong></p>
             <div class="d-grid gap-2" style="max-width: 500px;">
                 <?php foreach ($user_groups as $g): ?>
-                    <!-- NOTE: changed path so it works on testing pages and main page -->
-                    <form method="post" action="<?= BASE_PATH ?>/groups.php" style="margin: 0;">    
+                    <form method="post" action="/groups.php" style="margin: 0;">
                         <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($_SESSION['csrf_token']); ?>">
                         <input type="hidden" name="action" value="set_active">
                         <input type="hidden" name="group_id" value="<?php echo (int)$g['id']; ?>">

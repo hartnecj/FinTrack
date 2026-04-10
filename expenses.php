@@ -1,29 +1,12 @@
 <?php
-/*
-|--------------------------------------------------------------------------
-| expenses.php
-|--------------------------------------------------------------------------
-| Current features:
-| - Add expense (PRG enabled, flash messages)
-| - List recent expenses
-| - Delete expense (creator or group owner)
-|
-| New enhancement:
-| - Optional budget linking via budget_id
-| - Loads budgets for active group into a dropdown
-| - Saves budget_id with expense
-| - Shows budget name in the expense list
-|--------------------------------------------------------------------------
-*/
-
 require_once __DIR__ . "/auth_guard.php";
 require_once __DIR__ . "/config/db.php";
+require_once __DIR__ . "/balance_helpers.php";
 
 $user_id = (int)($_SESSION["user_id"] ?? 0);
 $user_name = $_SESSION["user_name"] ?? "User";
 $group_id = (int)($_SESSION["active_group_id"] ?? 0);
 
-// Flash messages (survive redirects)
 $error = '';
 $success = '';
 
@@ -37,7 +20,6 @@ if (!empty($_SESSION['flash_error'])) {
     unset($_SESSION['flash_error']);
 }
 
-// If user has no active group, they can't track expenses yet.
 if ($group_id <= 0) {
     ?>
     <!doctype html>
@@ -46,9 +28,7 @@ if ($group_id <= 0) {
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>Expenses</title>
-        <!-- NOTE: updated CSS 2/16/26 -->
         <link rel="stylesheet" href="<?= BASE_PATH ?>/assets/style.css?v=5">
-
     </head>
     <body class="ft-page">
         <main class="container" style="padding: 30px;">
@@ -63,11 +43,6 @@ if ($group_id <= 0) {
     exit;
 }
 
-/*
-|--------------------------------------------------------------------------
-| CSRF helper
-|--------------------------------------------------------------------------
-*/
 function require_csrf(): void {
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $posted = $_POST['csrf_token'] ?? '';
@@ -78,11 +53,6 @@ function require_csrf(): void {
     }
 }
 
-/*
-|--------------------------------------------------------------------------
-| Helper: is user the owner of the active group?
-|--------------------------------------------------------------------------
-*/
 function is_group_owner(PDO $pdo, int $group_id, int $user_id): bool {
     $stmt = $pdo->prepare("SELECT owner_id FROM groups WHERE id = ? LIMIT 1");
     $stmt->execute([$group_id]);
@@ -92,14 +62,6 @@ function is_group_owner(PDO $pdo, int $group_id, int $user_id): bool {
 
 $is_owner = is_group_owner($pdo, $group_id, $user_id);
 
-/*
-|--------------------------------------------------------------------------
-| Load budgets for dropdown
-|--------------------------------------------------------------------------
-| Only budgets belonging to the active group are shown.
-| This prevents accidentally linking an expense to another group's budget.
-|--------------------------------------------------------------------------
-*/
 $stmt = $pdo->prepare("
     SELECT id, name, start_date, end_date
     FROM budgets
@@ -109,11 +71,16 @@ $stmt = $pdo->prepare("
 $stmt->execute([$group_id]);
 $budgets = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-/*
-|--------------------------------------------------------------------------
-| Handle POST actions (PRG enabled)
-|--------------------------------------------------------------------------
-*/
+$stmt = $pdo->prepare("
+    SELECT u.id, u.name
+    FROM group_members gm
+    JOIN users u ON u.id = gm.user_id
+    WHERE gm.group_id = ?
+    ORDER BY u.name ASC
+");
+$stmt->execute([$group_id]);
+$group_members = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     require_csrf();
 
@@ -124,19 +91,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $expense_date = $_POST['expense_date'] ?? '';
         $category = trim($_POST['category'] ?? '');
         $description = trim($_POST['description'] ?? '');
-
-        // New: optional budget_id (must belong to this group)
         $budget_id = (int)($_POST['budget_id'] ?? 0);
         $budget_id = ($budget_id > 0) ? $budget_id : null;
 
-        // Validation
+        $split_type = $_POST['split_type'] ?? 'equal';
+        $selected_members = $_POST['selected_members'] ?? [];
+        $custom_amounts = $_POST['custom_amounts'] ?? [];
+
+        $selected_members = array_map('intval', $selected_members);
+        $valid_member_ids = array_map(function ($m) {
+            return (int)$m['id'];
+        }, $group_members);
+
+        $selected_members = array_values(array_filter($selected_members, function ($id) use ($valid_member_ids) {
+            return in_array($id, $valid_member_ids, true);
+        }));
+
         if ($amount_raw === '' || !is_numeric($amount_raw)) {
             $_SESSION['flash_error'] = "Please enter a valid amount.";
             header("Location: " . BASE_PATH . "/expenses.php");
             exit;
         }
 
-        $amount = (float)$amount_raw;
+        $amount = round((float)$amount_raw, 2);
+
         if ($amount <= 0) {
             $_SESSION['flash_error'] = "Amount must be greater than 0.";
             header("Location: " . BASE_PATH . "/expenses.php");
@@ -150,18 +128,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         if (strlen($category) > 50) {
-            $_SESSION['flash_error'] = "Category is too long (max 50 characters).";
+            $_SESSION['flash_error'] = "Category is too long.";
             header("Location: " . BASE_PATH . "/expenses.php");
             exit;
         }
 
         if (strlen($description) > 255) {
-            $_SESSION['flash_error'] = "Description is too long (max 255 characters).";
+            $_SESSION['flash_error'] = "Description is too long.";
             header("Location: " . BASE_PATH . "/expenses.php");
             exit;
         }
 
-        // If a budget_id was selected, verify it belongs to this group
         if ($budget_id !== null) {
             $stmt = $pdo->prepare("SELECT 1 FROM budgets WHERE id = ? AND group_id = ? LIMIT 1");
             $stmt->execute([$budget_id, $group_id]);
@@ -172,30 +149,94 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         }
 
-        // Insert
-        $stmt = $pdo->prepare("
-            INSERT INTO expenses (group_id, user_id, budget_id, amount, category, description, expense_date)
-            VALUES (?, ?, ?, ?, ?, ?, ?)
-        ");
-        $stmt->execute([
-            $group_id,
-            $user_id,
-            $budget_id,
-            $amount,
-            ($category === '' ? null : $category),
-            ($description === '' ? null : $description),
-            $expense_date
-        ]);
+        if (empty($selected_members)) {
+            $_SESSION['flash_error'] = "Please select at least one group member for the split.";
+            header("Location: " . BASE_PATH . "/expenses.php");
+            exit;
+        }
 
-        $_SESSION['flash_success'] = "Expense added.";
-        header("Location: " . BASE_PATH . "/expenses.php");
-        exit;
+        try {
+            $pdo->beginTransaction();
+
+            $stmt = $pdo->prepare("
+                INSERT INTO expenses (group_id, user_id, budget_id, amount, category, description, expense_date)
+                VALUES (?, ?, ?, ?, ?, ?, ?)
+            ");
+            $stmt->execute([
+                $group_id,
+                $user_id,
+                $budget_id,
+                $amount,
+                ($category === '' ? null : $category),
+                ($description === '' ? null : $description),
+                $expense_date
+            ]);
+
+            $expense_id = (int)$pdo->lastInsertId();
+            $split_rows = [];
+
+            if ($split_type === 'equal') {
+                $equal_shares = split_amount_evenly($amount, count($selected_members));
+
+                foreach ($selected_members as $index => $member_id) {
+                    $split_rows[] = [
+                        'user_id' => $member_id,
+                        'amount_owed' => $equal_shares[$index]
+                    ];
+                }
+            } elseif ($split_type === 'custom') {
+                $sum = 0.00;
+
+                foreach ($selected_members as $member_id) {
+                    $owed = isset($custom_amounts[$member_id]) ? round((float)$custom_amounts[$member_id], 2) : 0.00;
+
+                    if ($owed < 0) {
+                        throw new Exception("Custom split amounts cannot be negative.");
+                    }
+
+                    $split_rows[] = [
+                        'user_id' => $member_id,
+                        'amount_owed' => $owed
+                    ];
+
+                    $sum += $owed;
+                }
+
+                if (abs($sum - $amount) > 0.01) {
+                    throw new Exception("Custom split amounts must add up to the full expense amount.");
+                }
+            } else {
+                throw new Exception("Invalid split type.");
+            }
+
+            $stmt = $pdo->prepare("
+                INSERT INTO expense_splits (expense_id, user_id, amount_owed)
+                VALUES (?, ?, ?)
+            ");
+
+            foreach ($split_rows as $row) {
+                $stmt->execute([$expense_id, $row['user_id'], $row['amount_owed']]);
+            }
+
+            $pdo->commit();
+
+            $_SESSION['flash_success'] = "Expense added and split saved.";
+            header("Location: " . BASE_PATH . "/expenses.php");
+            exit;
+        } catch (Throwable $e) {
+            if ($pdo->inTransaction()) {
+                $pdo->rollBack();
+            }
+
+            $_SESSION['flash_error'] = $e->getMessage();
+            header("Location: " . BASE_PATH . "/expenses.php");
+            exit;
+        }
     }
 
     if ($action === 'delete_expense') {
         $expense_id = (int)($_POST['expense_id'] ?? 0);
 
-        // Verify expense belongs to this group
         $stmt = $pdo->prepare("
             SELECT id, user_id
             FROM expenses
@@ -212,6 +253,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         $expense_owner_id = (int)$expense['user_id'];
+
         if ($expense_owner_id !== $user_id && !$is_owner) {
             $_SESSION['flash_error'] = "You don't have permission to delete that expense.";
             header("Location: " . BASE_PATH . "/expenses.php");
@@ -227,13 +269,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-/*
-|--------------------------------------------------------------------------
-| Fetch recent expenses for display (GET request)
-|--------------------------------------------------------------------------
-| Now includes budget name via LEFT JOIN, since budget_id is optional.
-|--------------------------------------------------------------------------
-*/
 $stmt = $pdo->prepare("
     SELECT e.id, e.amount, e.category, e.description, e.expense_date, e.created_at,
            u.name AS created_by_name,
@@ -248,6 +283,26 @@ $stmt = $pdo->prepare("
 ");
 $stmt->execute([$group_id]);
 $expenses = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+$split_map = [];
+
+$stmt = $pdo->prepare("
+    SELECT es.expense_id, u.name, es.amount_owed
+    FROM expense_splits es
+    JOIN users u ON u.id = es.user_id
+    JOIN expenses e ON e.id = es.expense_id
+    WHERE e.group_id = ?
+    ORDER BY es.expense_id, u.name
+");
+$stmt->execute([$group_id]);
+
+while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+    $expense_id = (int)$row['expense_id'];
+    if (!isset($split_map[$expense_id])) {
+        $split_map[$expense_id] = [];
+    }
+    $split_map[$expense_id][] = $row['name'] . " ($" . number_format((float)$row['amount_owed'], 2) . ")";
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -256,12 +311,50 @@ $expenses = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-4.0.0.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- NOTE: updated CSS 2/16/26 -->
     <link rel="stylesheet" href="<?= BASE_PATH ?>/assets/style.css?v=5">
+    <style>
+        .split-box {
+            background: rgba(8, 12, 30, 0.85);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: #ffffff;
+        }
+
+        .split-box .form-check-label {
+            color: #ffffff;
+        }
+
+        .split-box .form-check-input {
+            background-color: #101426;
+            border-color: rgba(255, 255, 255, 0.35);
+        }
+
+        .split-box .form-check-input:checked {
+            background-color: #4f8cff;
+            border-color: #4f8cff;
+        }
+
+        .split-box .form-control {
+            background: rgba(255, 255, 255, 0.06);
+            color: #ffffff;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        .split-box .form-control::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .split-box .form-control:focus {
+            background: rgba(255, 255, 255, 0.10);
+            color: #ffffff;
+            border-color: #4f8cff;
+            box-shadow: 0 0 0 0.2rem rgba(79, 140, 255, 0.2);
+        }
+    </style>
 </head>
 <body class="ft-page">
 <nav>
     <ul>
+        <li id="profile-btn"><a href="<?= BASE_PATH ?>/profile.php"><button class="btn">Profile</button></a></li>
         <li><a href="<?= BASE_PATH ?>/"><button class="btn">Home</button></a></li>
         <li><a href="<?= BASE_PATH ?>/dashboard.php"><button class="btn">Dashboard</button></a></li>
         <li><a href="<?= BASE_PATH ?>/budgets.php"><button class="btn">Budgets</button></a></li>
@@ -273,114 +366,158 @@ $expenses = $stmt->fetchAll(PDO::FETCH_ASSOC);
 </nav>
 
 <section class="main-container shadow-lg">
-  <div style="padding: 5%;">
+    <div style="padding: 5%;">
+        <h2>Expenses</h2>
+        <p><small>Logged in as <?php echo htmlspecialchars($user_name); ?></small></p>
 
-    <!-- LEFT: Add Expense -->
-    <div>
-      <h2>Expenses</h2>
-      <p><small>Logged in as <?php echo htmlspecialchars($user_name); ?></small></p>
+        <?php if ($error !== ''): ?>
+            <div class="alert alert-danger" role="alert"><?php echo htmlspecialchars($error); ?></div>
+        <?php endif; ?>
 
-      <?php if ($error !== ''): ?>
-        <div class="alert alert-danger" role="alert"><?php echo htmlspecialchars($error); ?></div>
-      <?php endif; ?>
+        <?php if ($success !== ''): ?>
+            <div class="alert alert-success" role="alert"><?php echo htmlspecialchars($success); ?></div>
+        <?php endif; ?>
 
-      <?php if ($success !== ''): ?>
-        <div class="alert alert-success" role="alert"><?php echo htmlspecialchars($success); ?></div>
-      <?php endif; ?>
+        <h4 style="margin-top: 25px;">Add Expense</h4>
 
-      <h4 style="margin-top: 25px;">Add Expense</h4>
+        <form method="post" action="<?= BASE_PATH ?>/expenses.php" style="margin-top: 10px;">
+            <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($_SESSION['csrf_token']); ?>">
+            <input type="hidden" name="action" value="add_expense">
 
-      <form method="post" action="<?= BASE_PATH ?>/expenses.php" style="margin-top: 10px;">
-        <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($_SESSION['csrf_token']); ?>">
-        <input type="hidden" name="action" value="add_expense">
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Amount</label>
+                    <input type="number" step="0.01" min="0.01" class="form-control" name="amount" id="expense_amount" required>
+                </div>
 
-        <div class="row">
-          <div class="col-md-6 mb-3">
-            <label class="form-label">Amount</label>
-            <input type="number" step="0.01" min="0.01" class="form-control" name="amount" required>
-          </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Date</label>
+                    <input type="date" class="form-control" name="expense_date" required value="<?php echo date('Y-m-d'); ?>">
+                </div>
 
-          <div class="col-md-6 mb-3">
-            <label class="form-label">Date</label>
-            <input type="date" class="form-control" name="expense_date" required value="<?php echo date('Y-m-d'); ?>">
-          </div>
+                <div class="col-md-12 mb-3">
+                    <label class="form-label">Budget (optional)</label>
+                    <select class="form-control" name="budget_id">
+                        <option value="0">No budget</option>
+                        <?php foreach ($budgets as $b): ?>
+                            <option value="<?php echo (int)$b['id']; ?>">
+                                <?php echo htmlspecialchars($b['name']); ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
 
-          <div class="col-md-12 mb-3">
-            <label class="form-label">Budget (optional)</label>
-            <select class="form-control" name="budget_id">
-              <option value="0">No budget</option>
-              <?php foreach ($budgets as $b): ?>
-                <option value="<?php echo (int)$b['id']; ?>">
-                  <?php echo htmlspecialchars($b['name']); ?>
-                </option>
-              <?php endforeach; ?>
-            </select>
-          </div>
+                <div class="col-md-12 mb-3">
+                    <label class="form-label">Category (optional)</label>
+                    <input type="text" class="form-control" name="category" placeholder="Groceries">
+                </div>
 
-          <div class="col-md-12 mb-3">
-            <label class="form-label">Category (optional)</label>
-            <input type="text" class="form-control" name="category" placeholder="Groceries">
-          </div>
+                <div class="col-md-12 mb-3">
+                    <label class="form-label">Description (optional)</label>
+                    <input type="text" class="form-control" name="description" placeholder="Target run">
+                </div>
 
-          <div class="col-md-12 mb-3">
-            <label class="form-label">Description (optional)</label>
-            <input type="text" class="form-control" name="description" placeholder="Target run">
-          </div>
-        </div>
+                <div class="col-md-12 mb-3">
+                    <label class="form-label">Split Type</label>
+                    <select class="form-control" name="split_type" id="split_type">
+                        <option value="equal">Equal split</option>
+                        <option value="custom">Custom split</option>
+                    </select>
+                </div>
 
-        <button type="submit" class="btn w-100">Add Expense</button>
-      </form>
-    </div>
+                <div class="col-md-12 mb-3">
+                    <label class="form-label">Split Between</label>
+                    <div class="border rounded p-3 split-box">
+                        <?php foreach ($group_members as $member): ?>
+                            <div class="form-check mb-2">
+                                <input
+                                    class="form-check-input split-member-checkbox"
+                                    type="checkbox"
+                                    name="selected_members[]"
+                                    value="<?php echo (int)$member['id']; ?>"
+                                    id="member_<?php echo (int)$member['id']; ?>"
+                                    checked
+                                >
+                                <label class="form-check-label" for="member_<?php echo (int)$member['id']; ?>">
+                                    <?php echo htmlspecialchars($member['name']); ?>
+                                </label>
+                            </div>
 
-    <!-- RIGHT: Recent Expenses -->
-      <h4 style="margin-top: 25px;">Recent Expenses</h4>
-      <p style="margin-top: 10px;"><a href="<?= BASE_PATH ?>/dashboard.php">Back to dashboard</a></p>
+                            <div class="mb-2 custom-amount-row" data-user-id="<?php echo (int)$member['id']; ?>" style="display:none;">
+                                <input
+                                    type="number"
+                                    step="0.01"
+                                    min="0"
+                                    class="form-control"
+                                    name="custom_amounts[<?php echo (int)$member['id']; ?>]"
+                                    placeholder="Custom amount for <?php echo htmlspecialchars($member['name']); ?>"
+                                >
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+                    <small class="text-light">Equal split will divide the amount automatically. Custom split must add up to the full amount.</small>
+                </div>
+            </div>
 
+            <button type="submit" class="btn w-100">Add Expense</button>
+        </form>
 
-      <?php if (empty($expenses)): ?>
-        <p style="margin-top: 10px;">No expenses yet.</p>
-      <?php else: ?>
-          <table class="table table-striped" style="margin-top: 10px;">
-            <thead>
-              <tr>
-                <th>Date</th>
-                <th>Amount</th>
-                <th>Budget</th>
-                <th>Category</th>
-                <th>Description</th>
-                <th>Added By</th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody>
-              <?php foreach ($expenses as $e): ?>
-                <tr>
-                  <td><?php echo htmlspecialchars(date('M j, Y', strtotime($e['expense_date']))); ?></td>
-                  <td><?php echo htmlspecialchars(number_format((float)$e['amount'], 2)); ?></td>
-                  <td><?php echo htmlspecialchars($e['budget_name'] ?? ''); ?></td>
-                  <td><?php echo htmlspecialchars($e['category'] ?? ''); ?></td>
-                  <td><?php echo htmlspecialchars($e['description'] ?? ''); ?></td>
-                  <td><?php echo htmlspecialchars($e['created_by_name']); ?></td>
-                  <td style="text-align:right; white-space:nowrap;">
-                    <?php $can_delete = ((int)$e['created_by_id'] === $user_id) || $is_owner; ?>
-                    <?php if ($can_delete): ?>
-                      <form method="post" action="<?= BASE_PATH ?>/expenses.php" style="display:inline;">
-                        <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($_SESSION['csrf_token']); ?>">
-                        <input type="hidden" name="action" value="delete_expense">
-                        <input type="hidden" name="expense_id" value="<?php echo (int)$e['id']; ?>">
-                        <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Delete this expense?')">Delete</button>
-                      </form>
-                    <?php endif; ?>
-                  </td>
-                </tr>
-              <?php endforeach; ?>
-            </tbody>
-          </table>
-        </div>
-      <?php endif; ?>
+        <h4 style="margin-top: 25px;">Recent Expenses</h4>
+        <p style="margin-top: 10px;"><a href="<?= BASE_PATH ?>/dashboard.php">Back to dashboard</a></p>
+
+        <?php if (empty($expenses)): ?>
+            <p style="margin-top: 10px;">No expenses yet.</p>
+        <?php else: ?>
+            <table class="table table-striped" style="margin-top: 10px;">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Amount</th>
+                        <th>Budget</th>
+                        <th>Category</th>
+                        <th>Description</th>
+                        <th>Split</th>
+                        <th>Added By</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($expenses as $e): ?>
+                        <tr>
+                            <td><?php echo htmlspecialchars(date('M j, Y', strtotime($e['expense_date']))); ?></td>
+                            <td>$<?php echo htmlspecialchars(number_format((float)$e['amount'], 2)); ?></td>
+                            <td><?php echo htmlspecialchars($e['budget_name'] ?? ''); ?></td>
+                            <td><?php echo htmlspecialchars($e['category'] ?? ''); ?></td>
+                            <td><?php echo htmlspecialchars($e['description'] ?? ''); ?></td>
+                            <td>
+                                <?php
+                                $expense_id = (int)$e['id'];
+                                if (!empty($split_map[$expense_id])) {
+                                    echo htmlspecialchars(implode(', ', $split_map[$expense_id]));
+                                } else {
+                                    echo '';
+                                }
+                                ?>
+                            </td>
+                            <td><?php echo htmlspecialchars($e['created_by_name']); ?></td>
+                            <td style="text-align:right; white-space:nowrap;">
+                                <?php $can_delete = ((int)$e['created_by_id'] === $user_id) || $is_owner; ?>
+                                <?php if ($can_delete): ?>
+                                    <form method="post" action="<?= BASE_PATH ?>/expenses.php" style="display:inline;">
+                                        <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($_SESSION['csrf_token']); ?>">
+                                        <input type="hidden" name="action" value="delete_expense">
+                                        <input type="hidden" name="expense_id" value="<?php echo (int)$e['id']; ?>">
+                                        <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Delete this expense?')">Delete</button>
+                                    </form>
+                                <?php endif; ?>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        <?php endif; ?>
     </div>
 </section>
-
 
 <footer>
     <div class="form-check form-switch">
@@ -388,6 +525,35 @@ $expenses = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <label class="form-check-label" for="styleSwitch" id="styleLabel"> Light mode: On </label>
     </div>
 </footer>
+
+<script>
+(function () {
+    const splitType = document.getElementById('split_type');
+    const checkboxes = document.querySelectorAll('.split-member-checkbox');
+    const customRows = document.querySelectorAll('.custom-amount-row');
+
+    function refreshCustomRows() {
+        const isCustom = splitType.value === 'custom';
+
+        customRows.forEach(row => {
+            const userId = row.getAttribute('data-user-id');
+            const checkbox = document.getElementById('member_' + userId);
+
+            row.style.display = (isCustom && checkbox && checkbox.checked) ? 'block' : 'none';
+        });
+    }
+
+    if (splitType) {
+        splitType.addEventListener('change', refreshCustomRows);
+    }
+
+    checkboxes.forEach(cb => {
+        cb.addEventListener('change', refreshCustomRows);
+    });
+
+    refreshCustomRows();
+})();
+</script>
 
 <script src="<?= BASE_PATH ?>/assets/pageCustomization.js"></script>
 </body>

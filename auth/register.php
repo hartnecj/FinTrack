@@ -52,10 +52,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <!-- meta viewport tag -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- link to stylesheet -->
-    <link rel="stylesheet" href="../assets/landingStyles.css">
+    <link rel="stylesheet" href="/assets/style.css">
   </head><!-- end head tag -->
   <!-- start body tag -->
-  <body>
+  <body class="ft-page">
       
     <nav><!-- navigation section -->
       <ul>
@@ -66,7 +66,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </nav><!-- end navigation-->
 
     <!-- main section -->
-    <section class="main-container shadow-lg">
+    <section class="main-container shadow-lg p-5">
       <!-- start form section -->
       <form method="POST" action="">
         <fieldset class="form-group">
@@ -98,7 +98,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <fieldset class="form-group">
           
           <!-- name input -->
-          <label for="first-name" class="input-label">First Name</label><label for="last-name" class="input-label left-input-label">Last Name</label>
+          <label for="first-name" class="input-label">First Name &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; &emsp;</label><label for="last-name" class="input-label left-input-label">Last Name</label>
           <div class="mb-3 input-group">
             <!-- first name input -->
             <input type="text" id="first-name" name="first-name" class="form-control" aria-label="First-Name input" aria-description="first-name input box" required>

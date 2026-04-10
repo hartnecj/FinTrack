@@ -4,7 +4,8 @@
 
 //value that tracks if dark mode is on or off
 var isDarkMode = localStorage.getItem('mode');
-
+//set editing to false as default
+var editing = false;
 /*---------------------*
 * function definitions *
 *----------------------*/
@@ -28,6 +29,8 @@ function changeStyles(){
     localStorage.setItem('mode', isDarkMode);
 }//end changeStyles()
 
+
+
 /*----------------------------*
 * function calls and triggers *
 *-----------------------------*/
@@ -40,3 +43,4 @@ if (isDarkMode === "true"){
 
 //jQuery selector that triggers function on switch toggle
 $("#styleSwitch").change(changeStyles);
+

@@ -182,6 +182,7 @@ $messages = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <body class="ft-page">
 <nav>
     <ul>
+        <li id="profile-btn"><a href="<?= BASE_PATH ?>/profile.php"><button class="btn">Profile</button></a></li>
         <li><a href="<?= BASE_PATH ?>/"><button class="btn">Home</button></a></li>
         <li><a href="<?= BASE_PATH ?>/dashboard.php"><button class="btn">Dashboard</button></a></li>
         <li><a href="<?= BASE_PATH ?>/budgets.php"><button class="btn">Budgets</button></a></li>

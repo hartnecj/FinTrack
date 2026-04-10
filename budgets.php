@@ -51,16 +51,14 @@ if ($group_id <= 0) {
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>Budgets</title>
-        <!-- NOTE: changed path so it works on testing pages and main page -->
-        <link rel="stylesheet" href="<?= BASE_PATH ?>/assets/style.css?v=5">
+        <link rel="stylesheet" href="/assets/style.css?v=5">    
     </head>
     <body class="ft-page">
         <main class="container" style="padding: 30px;">
             <h1>Budgets</h1>
             <p>You need to join or create a group before you can create budgets.</p>
-            <!-- NOTE: changed path so it works on testing pages and main page -->
-            <p><a href="<?= BASE_PATH ?>/groups.php">Go to Groups</a></p>
-            <p><a href="<?= BASE_PATH ?>/dashboard.php">Back to dashboard</a></p>
+            <p><a href="/groups.php">Go to Groups</a></p>
+            <p><a href="/dashboard.php">Back to dashboard</a></p>
         </main>
     </body>
     </html>
@@ -119,21 +117,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Validation
         if ($name === '') {
             $_SESSION['flash_error'] = "Budget name is required.";
-            /* NOTE: changed path so it works on testing pages and main page */
-            header("Location: " . BASE_PATH . "/budgets.php");
+            header("Location: /budgets.php");
             exit;
         }
 
         if (strlen($name) > 100) {
             $_SESSION['flash_error'] = "Budget name is too long (max 100 characters).";
-            header("Location: " . BASE_PATH . "/budgets.php");
+            header("Location: /budgets.php");
             exit;
         }
 
         // If both dates provided, make sure they are in the correct order
         if ($start_date !== '' && $end_date !== '' && $start_date > $end_date) {
             $_SESSION['flash_error'] = "Start date cannot be after end date.";
-            header("Location: " . BASE_PATH . "/budgets.php");
+            header("Location: /budgets.php");
             exit;
         }
 
@@ -151,7 +148,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         ]);
 
         $_SESSION['flash_success'] = "Budget created.";
-        header("Location: " . BASE_PATH . "/budgets.php");
+        header("Location: /budgets.php");
         exit;
     }
 
@@ -170,7 +167,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         if (!$budget) {
             $_SESSION['flash_error'] = "Budget not found.";
-            header("Location: " . BASE_PATH . "/budgets.php");
+            header("Location: /budgets.php");
             exit;
         }
 
@@ -179,7 +176,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Only allow delete if creator OR group owner
         if ($created_by !== $user_id && !$is_owner) {
             $_SESSION['flash_error'] = "You don't have permission to delete that budget.";
-            header("Location: " . BASE_PATH . "/budgets.php");
+            header("Location: /budgets.php");
             exit;
         }
 
@@ -187,7 +184,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->execute([$budget_id, $group_id]);
 
         $_SESSION['flash_success'] = "Budget deleted.";
-        header("Location: " . BASE_PATH . "/budgets.php");
+        header("Location: /budgets.php");
         exit;
     }
 }
@@ -217,20 +214,20 @@ $budgets = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <script src="https://code.jquery.com/jquery-4.0.0.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <!-- NOTE: changed path so it works on testing pages and main page -->
-    <link rel="stylesheet" href="<?= BASE_PATH ?>/assets/style.css?v=5">
+    <!-- NOTE: Correct path (your project uses /assets/style.css, not /assets/css/style.css) -->
+    <link rel="stylesheet" href="/assets/style.css?v=5">
 </head>
 <body class="ft-page">
 <nav>
     <ul>
-        <!-- NOTE: changed path so it works on testing pages and main page -->
-        <li><a href="<?= BASE_PATH ?>/"><button class="btn">Home</button></a></li>
-        <li><a href="<?= BASE_PATH ?>/dashboard.php"><button class="btn">Dashboard</button></a></li>
-        <li><a href="<?= BASE_PATH ?>/budgets.php"><button class="btn">Budgets</button></a></li>
-        <li><a href="<?= BASE_PATH ?>/expenses.php"><button class="btn">Expenses</button></a></li>
-        <li><a href="<?= BASE_PATH ?>/groups.php"><button class="btn">Groups</button></a></li>
+        <li id="profile-btn"><a href="<?= BASE_PATH ?>/profile.php"><button class="btn">Profile</button></a></li>
+        <li><a href="/"><button class="btn">Home</button></a></li>
+        <li><a href="/dashboard.php"><button class="btn">Dashboard</button></a></li>
+        <li><a href="/budgets.php"><button class="btn">Budgets</button></a></li>
+        <li><a href="/expenses.php"><button class="btn">Expenses</button></a></li>
+        <li><a href="/groups.php"><button class="btn">Groups</button></a></li>
         <li><a href="<?= BASE_PATH ?>/messages.php"><button class="btn">Messages</button></a></li>
-        <li><a href="<?= BASE_PATH ?>/auth/logout.php"><button class="btn">Logout</button></a></li>
+        <li><a href="/auth/logout.php"><button class="btn">Logout</button></a></li>
     </ul>
 </nav>
 
@@ -248,8 +245,7 @@ $budgets = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <?php endif; ?>
 
         <h4 style="margin-top: 25px;">Create Budget</h4>
-        <!-- NOTE: changed path so it works on testing pages and main page -->
-        <form method="post" action="<?= BASE_PATH ?>/budgets.php" style="margin-top: 10px;">
+        <form method="post" action="/budgets.php" style="margin-top: 10px;">
             <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($_SESSION['csrf_token']); ?>">
             <input type="hidden" name="action" value="add_budget">
 
@@ -302,8 +298,7 @@ $budgets = $stmt->fetchAll(PDO::FETCH_ASSOC);
                             $can_delete = ((int)$b['created_by'] === $user_id) || $is_owner;
                             ?>
                             <?php if ($can_delete): ?>
-                                <!-- NOTE: changed path so it works on testing pages and main page -->
-                                <form method="post" action="<?= BASE_PATH ?>/budgets.php" style="display: inline;">
+                                <form method="post" action="/budgets.php" style="display: inline;">
                                     <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($_SESSION['csrf_token']); ?>">
                                     <input type="hidden" name="action" value="delete_budget">
                                     <input type="hidden" name="budget_id" value="<?php echo (int)$b['id']; ?>">
@@ -317,8 +312,7 @@ $budgets = $stmt->fetchAll(PDO::FETCH_ASSOC);
             </table>
         <?php endif; ?>
 
-        <!-- NOTE: changed path so it works on testing pages and main page -->
-        <p style="margin-top: 30px;"><a href="<?= BASE_PATH ?>/dashboard.php">Back to dashboard</a></p>
+        <p style="margin-top: 30px;"><a href="/dashboard.php">Back to dashboard</a></p>
     </div>
 </section>
 
@@ -329,7 +323,7 @@ $budgets = $stmt->fetchAll(PDO::FETCH_ASSOC);
     </div>
 </footer>
 
-<!-- NOTE: changed path so it works on testing pages and main page -->
-<script src="<?= BASE_PATH ?>/assets/pageCustomization.js"></script>
+<!-- NOTE: Correct path (your project uses /assets/pageCustomization.js, not /assets/js/pageCustomization.js) -->
+<script src="/assets/pageCustomization.js"></script>
 </body>
 </html>
