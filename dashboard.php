@@ -171,6 +171,35 @@ if ($group_id > 0 && $active_group) {
             </p>
 
             <div class="row" style="margin-top: 20px;">
+            <div class="col-lg-6 mb-3">
+                <div class="card shadow-sm balance-card">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <h5 class="card-title mb-1">Spending Breakdown</h5>
+                                <small class="empty-note">Last 6 months</small>
+                            </div>
+                            <div class="text-end">
+                                <small class="empty-note">Total</small>
+                                <div class="fw-bold" id="ftPieTotal">$0.00</div>
+                            </div>
+                        </div>
+
+                        <div class="mt-3" style="height: 320px;">
+                            <canvas id="ftSpendingPie"></canvas>
+                        </div>
+
+                        <div class="mt-3" id="ftPieEmptyState" style="display:none;">
+                            <div class="alert alert-secondary mb-0">
+                                No expenses found for this period yet.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+            <div class="row" style="margin-top: 20px;">
                 <div class="col-md-4 mb-3">
                     <div class="card shadow-sm balance-card">
                         <div class="card-body">
@@ -305,6 +334,91 @@ if ($group_id > 0 && $active_group) {
         <label class="form-check-label" for="styleSwitch" id="styleLabel"> Light mode: On </label>
     </div>
 </footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script>
+(() => {
+    const canvas = document.getElementById("ftSpendingPie");
+    if (!canvas) return;
+
+    const totalEl = document.getElementById("ftPieTotal");
+    const emptyEl = document.getElementById("ftPieEmptyState");
+
+    const range = "180d";
+    // NOTE: Corrected path to match actual project structure (BASE_PATH)                     
+    fetch(`<?= BASE_PATH ?>/backend/expenses_pie_chart.php?range=${encodeURIComponent(range)}`)
+        .then((res) => res.json())
+        .then((data) => {
+            if (data.error) {
+                canvas.parentElement.style.display = "none";
+                if (emptyEl) {
+                    emptyEl.style.display = "block";
+                    emptyEl.innerHTML = `<div class="alert alert-warning mb-0">${data.error}</div>`;
+                }
+                return;
+            }
+
+            const labels = data.labels || [];
+            const values = data.values || [];
+            const total = Number(data.total || 0);
+
+            if (totalEl) totalEl.textContent = `$${total.toFixed(2)}`;
+
+            if (!labels.length) {
+                canvas.parentElement.style.display = "none";
+                if (emptyEl) emptyEl.style.display = "block";
+                return;
+            }
+
+            if (window.ftSpendingChart) {
+                window.ftSpendingChart.destroy();
+            }
+
+            window.ftSpendingChart = new Chart(canvas.getContext("2d"), {
+                type: "doughnut",
+                data: {
+                    labels,
+                    datasets: [{
+                        data: values,
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: "65%",
+                    plugins: {
+                        legend: {
+                            position: "bottom",
+                            labels: {
+                                color: "#ffffff",
+                                font: { size: 14 }
+                            }
+                        },
+                        tooltip: {
+                            titleFont: { size: 18, weight: "bold" },
+                            bodyFont: { size: 16 },
+                            padding: 12,
+                            callbacks: {
+                                label: function (context) {
+                                    const v = Number(context.raw || 0);
+                                    return `${context.label}: $${v.toFixed(2)}`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        })
+        .catch(() => {
+            canvas.parentElement.style.display = "none";
+            if (emptyEl) {
+                emptyEl.style.display = "block";
+                emptyEl.innerHTML = `<div class="alert alert-warning mb-0">Unable to load chart data.</div>`;
+            }
+        });
+})();
+</script>
 
 <script src="<?= BASE_PATH ?>/assets/pageCustomization.js"></script>
 </body>

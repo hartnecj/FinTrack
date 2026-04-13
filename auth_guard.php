@@ -18,6 +18,8 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
+require_once __DIR__ . "/config/db.php";
+
 // CSRF token is used to protect POST requests from forged submissions.
 // This gets created once per session.
 if (empty($_SESSION['csrf_token'])) {
@@ -26,6 +28,6 @@ if (empty($_SESSION['csrf_token'])) {
 
 // If not logged in, send user to our actual login page.
 if (empty($_SESSION["user_id"])) {
-    header("Location: /auth/login.php");
+    header("Location: " . BASE_PATH . "/auth/login.php");
     exit;
 }
