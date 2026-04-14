@@ -509,6 +509,12 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                                         <input type="hidden" name="expense_id" value="<?php echo (int)$e['id']; ?>">
                                         <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Delete this expense?')">Delete</button>
                                     </form>
+                                    
+                                    <!-- button for editing expense -->
+                                    <a href="<?= BASE_PATH ?>/edit_expenses.php?id=<?= (int)$e['id']; ?>">
+                                        <button type="button" class="btn btn-sm btn-primary">Edit</button>
+                                    </a>
+                                
                                 <?php endif; ?>
                             </td>
                         </tr>
