@@ -317,6 +317,12 @@ $budgets = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                     <button type="submit" class="btn btn-sm" onclick="return confirm('Delete this budget?')">Delete</button>
                                 </form>
                             <?php endif; ?>
+                         
+                            <!-- button for editing budget -->
+                            <a href="<?= BASE_PATH ?>/edit_budgets.php?id=<?= (int)$b['id']; ?>">
+                                <button type="button" class="btn btn-sm btn-primary">Edit</button>
+                            </a>
+                            
                         </td>
                     </tr>
                 <?php endforeach; ?>
