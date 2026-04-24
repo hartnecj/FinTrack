@@ -140,6 +140,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $expense_date = $_POST['expense_date'] ?? '';
         $category = trim($_POST['category'] ?? '');
         $description = trim($_POST['description'] ?? '');
+        $personal = $_POST['personal'] ?? NULL;
 
         // New: optional budget_id (must belong to this group)
         $budget_id = (int)($_POST['budget_id'] ?? 0);
@@ -190,7 +191,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         // update, kept everything else the same but changed SQL update and execute order
         $stmt = $pdo->prepare("
-            UPDATE expenses SET amount = ?, category = ?, description = ?, expense_date = ?, budget_id = ?
+            UPDATE expenses SET amount = ?, category = ?, description = ?, expense_date = ?, budget_id = ?, personal=?
             WHERE id=? AND group_id = ?
             
         ");
@@ -202,7 +203,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $expense_date,
             $budget_id,
             $expense_id,
-            $group_id
+            $group_id,
+            $personal
         ]);
 
         $_SESSION['flash_success'] = "Expense updated successfully.";
@@ -344,10 +346,16 @@ $expenses = $stmt->fetchAll(PDO::FETCH_ASSOC);
             </select>
           </div>
 
-          <div class="col-md-12 mb-3">
-            <label class="form-label">Category (optional)</label>
-            <input type="text" class="form-control" name="category" placeholder="Groceries" value="<?= htmlspecialchars($expense['category'] ?? ''); ?>">
-          </div>
+          <div class="col-md-8 mb-3">
+                <label class="form-label">Category (optional)</label>
+                <input type="text" class="form-control" name="category" placeholder="Groceries">
+            </div>
+                
+            <div class="col-md-4 mb-3">
+                <label class="form-label">Personal? (optional)</label><br>
+                <input type="checkbox" class="form-check-input" name="personal" value="1">
+            </div>
+
 
           <div class="col-md-12 mb-3">
             <label class="form-label">Description (optional)</label>
@@ -357,7 +365,7 @@ $expenses = $stmt->fetchAll(PDO::FETCH_ASSOC);
      
         <input type="hidden" name="expense_id" value="<?=(int)$expense['id']; ?>">
      
-        <button type="submit" class="btn w-100">Save Change</button>
+        <button type="submit" class="btn w-100">Save Changes</button>
       </form>
     </div>
 
