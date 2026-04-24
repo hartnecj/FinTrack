@@ -390,17 +390,17 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             <div class="row">
                 <div class="col-md-6 mb-3">
                     <label class="form-label">Amount</label>
-                    <input type="number" step="0.01" min="0.01" class="form-control" name="amount" id="expense_amount" required>
+                    <input type="number" step="0.01" min="0.01" class="form-control" name="amount" id="expense_amount" aria-label="expense amount" required>
                 </div>
 
                 <div class="col-md-6 mb-3">
                     <label class="form-label">Date</label>
-                    <input type="date" class="form-control" name="expense_date" required value="<?php echo date('Y-m-d'); ?>">
+                    <input type="date" class="form-control" name="expense_date" aria-label="date of expense" required value="<?php echo date('Y-m-d'); ?>">
                 </div>
 
                 <div class="col-md-12 mb-3">
                     <label class="form-label">Budget (optional)</label>
-                    <select class="form-control" name="budget_id">
+                    <select class="form-control" name="budget_id" aria-label="budget select" >
                         <option value="0">No budget</option>
                         <?php foreach ($budgets as $b): ?>
                             <option value="<?php echo (int)$b['id']; ?>">
@@ -412,22 +412,22 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 
                 <div class="col-md-8 mb-3">
                     <label class="form-label">Category (optional)</label>
-                    <input type="text" class="form-control" name="category" placeholder="Groceries">
+                    <input type="text" class="form-control" name="category" placeholder="Groceries" aria-label="optional category" >
                 </div>
                 
                 <div class="col-md-4 mb-3">
                     <label class="form-label">Personal? (optional)</label><br>
-                    <input type="checkbox" class="form-check-input" name="personal" value="1">
+                    <input type="checkbox" class="form-check-input" name="personal" value="1" aria-label="personal expense toggle" >
                 </div>
 
                 <div class="col-md-12 mb-3">
                     <label class="form-label">Description (optional)</label><br>
-                    <input type="text" class="form-control" name="description" placeholder="Target run">
+                    <input type="text" class="form-control" name="description" placeholder="Target run" aria-label="expense description" >
                 </div>
 
                 <div class="col-md-12 mb-3">
                     <label class="form-label">Split Type</label>
-                    <select class="form-control" name="split_type" id="split_type">
+                    <select class="form-control" name="split_type" id="split_type" aria-label="expense-split option" >
                         <option value="equal">Equal split</option>
                         <option value="custom">Custom split</option>
                     </select>
@@ -517,12 +517,12 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                                         <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($_SESSION['csrf_token']); ?>">
                                         <input type="hidden" name="action" value="delete_expense">
                                         <input type="hidden" name="expense_id" value="<?php echo (int)$e['id']; ?>">
-                                        <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Delete this expense?')">Delete</button>
+                                        <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Delete this expense?')" aria-label="delete button" >Delete</button>
                                     </form>
                                     
                                     <!-- button for editing expense -->
                                     <a href="<?= BASE_PATH ?>/edit_expenses.php?id=<?= (int)$e['id']; ?>">
-                                        <button type="button" class="btn btn-sm btn-primary">Edit</button>
+                                        <button type="button" class="btn btn-sm btn-primary" aria-label="edit expense" >Edit</button>
                                     </a>
                                 
                                 <?php endif; ?>
