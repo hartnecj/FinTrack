@@ -112,6 +112,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if ($action === 'edit_budget') {
         $name = trim($_POST['name'] ?? '');
+        $category = trim($_POST['category'] ?? '');
+        $amount_limit = $_POST['amount'] ?? 0;
         $start_date = $_POST['start_date'] ?? '';
         $end_date = $_POST['end_date'] ?? '';
         $budget_id = (int)($_POST['budget_id'] ?? 0);
@@ -125,30 +127,39 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Validation
         if ($name === '') {
             $_SESSION['flash_error'] = "Budget name is required.";
-            header("Location: /budgets.php");
+            header("Location: /edit_budgets.php");
             exit;
         }
 
         if (strlen($name) > 100) {
             $_SESSION['flash_error'] = "Budget name is too long (max 100 characters).";
-            header("Location: /budgets.php");
+            header("Location: /edit_budgets.php");
             exit;
         }
 
         // If both dates provided, make sure they are in the correct order
         if ($start_date !== '' && $end_date !== '' && $start_date > $end_date) {
             $_SESSION['flash_error'] = "Start date cannot be after end date.";
-            header("Location: /budgets.php");
+            header("Location: /edit_budgets.php");
             exit;
         }
-
+        
+        //added if there is no budget amount_limit
+        if($amount_limit == NULL || $amount_limit == 0 || $amount_limit == ''){
+            $_SESSION['flash_error'] = "Invalid budget amount";
+            header("Location: " . BASE_PATH . "/edit_budgets.php");
+            exit;
+        }
+        
         // Insert
         $stmt = $pdo->prepare("
-            UPDATE budgets SET name=?, start_date=?, end_date=?
+            UPDATE budgets SET name=?, category=?, amount_limit=?, start_date=?, end_date=?
             WHERE id=? AND group_id=?
         ");
         $stmt->execute([
             $name,
+            $category,
+            $amount_limit,
             ($start_date === '' ? null : $start_date),
             ($end_date === '' ? null : $end_date),
             $budget_id,
@@ -175,7 +186,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         if (!$budget) {
             $_SESSION['flash_error'] = "Budget not found.";
-            header("Location: /budgets.php");
+            header("Location: /edit_budgets.php");
             exit;
         }
 
@@ -262,6 +273,16 @@ $budget = $stmt->fetch(PDO::FETCH_ASSOC);
                     <label class="form-label">Budget Name</label>
                     <input type="text" class="form-control" name="name" value="<?= htmlspecialchars($budget['name'] ?? ''); ?>" required>
                 </div>
+                
+                <div class="col-md-4 mb-3">
+                    <label class="form-label">Budget Category</label>
+                    <input type="text" class="form-control" name="category" placeholder="recycling" value="<?= htmlspecialchars($budget['category'] ?? ''); ?>" required>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Amount Limit</label>
+                    <input type="number" step="0.01" min="0.01" class="form-control" name="amount" id="budget_amount" aria-label="amount limit" value="<?= htmlspecialchars($budget['amount_limit'] ?? ''); ?>" required>
+                </div>
 
                 <div class="col-md-3 mb-3">
                     <label class="form-label">Start Date (optional)</label>
@@ -278,6 +299,11 @@ $budget = $stmt->fetch(PDO::FETCH_ASSOC);
                 <div class="col-md-2 mb-3 d-flex align-items-end">
                     <button type="submit" class="btn w-100">Save Changes</button>
                 </div>
+                
+                <div class="col-md-2 mb-3 d-flex align-items-end">
+                    <a href="/budgets.php"><button class="btn w-100" formnovalidate>Cancel</button></a>
+                </div>
+
             </div>
         </form>
 
