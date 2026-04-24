@@ -91,6 +91,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $expense_date = $_POST['expense_date'] ?? '';
         $category = trim($_POST['category'] ?? '');
         $description = trim($_POST['description'] ?? '');
+        $personal    = trim($_POST['personal'] ?? NULL);
         $budget_id = (int)($_POST['budget_id'] ?? 0);
         $budget_id = ($budget_id > 0) ? $budget_id : null;
 
@@ -159,8 +160,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $pdo->beginTransaction();
 
             $stmt = $pdo->prepare("
-                INSERT INTO expenses (group_id, user_id, budget_id, amount, category, description, expense_date)
-                VALUES (?, ?, ?, ?, ?, ?, ?)
+                INSERT INTO expenses (group_id, user_id, budget_id, amount, category, description, expense_date, personal)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?)
             ");
             $stmt->execute([
                 $group_id,
@@ -169,7 +170,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $amount,
                 ($category === '' ? null : $category),
                 ($description === '' ? null : $description),
-                $expense_date
+                $expense_date,
+                $personal
             ]);
 
             $expense_id = (int)$pdo->lastInsertId();
@@ -268,6 +270,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 }
+/* added and clause to make sure only appropriately flagged personal messages are shown to groups */
 
 $stmt = $pdo->prepare("
     SELECT e.id, e.amount, e.category, e.description, e.expense_date, e.created_at,
@@ -277,11 +280,11 @@ $stmt = $pdo->prepare("
     FROM expenses e
     JOIN users u ON e.user_id = u.id
     LEFT JOIN budgets b ON e.budget_id = b.id
-    WHERE e.group_id = ?
+    WHERE e.group_id = ? AND ((e.personal = 0 OR e.personal IS NULL) OR (e.personal = 1 AND u.id = ?))
     ORDER BY e.expense_date DESC, e.created_at DESC
     LIMIT 50
 ");
-$stmt->execute([$group_id]);
+$stmt->execute([$group_id, $user_id]);
 $expenses = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 $split_map = [];
@@ -407,13 +410,18 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                     </select>
                 </div>
 
-                <div class="col-md-12 mb-3">
+                <div class="col-md-8 mb-3">
                     <label class="form-label">Category (optional)</label>
                     <input type="text" class="form-control" name="category" placeholder="Groceries">
                 </div>
+                
+                <div class="col-md-4 mb-3">
+                    <label class="form-label">Personal? (optional)</label><br>
+                    <input type="checkbox" class="form-check-input" name="personal" value="1">
+                </div>
 
                 <div class="col-md-12 mb-3">
-                    <label class="form-label">Description (optional)</label>
+                    <label class="form-label">Description (optional)</label><br>
                     <input type="text" class="form-control" name="description" placeholder="Target run">
                 </div>
 
@@ -475,6 +483,7 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                         <th>Amount</th>
                         <th>Budget</th>
                         <th>Category</th>
+                        <th>Personal</th>
                         <th>Description</th>
                         <th>Split</th>
                         <th>Added By</th>
@@ -488,6 +497,7 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                             <td>$<?php echo htmlspecialchars(number_format((float)$e['amount'], 2)); ?></td>
                             <td><?php echo htmlspecialchars($e['budget_name'] ?? ''); ?></td>
                             <td><?php echo htmlspecialchars($e['category'] ?? ''); ?></td>
+                            <td><?php echo htmlspecialchars($e['personal'] ?? ''); ?></td>
                             <td><?php echo htmlspecialchars($e['description'] ?? ''); ?></td>
                             <td>
                                 <?php
