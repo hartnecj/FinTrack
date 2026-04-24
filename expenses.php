@@ -357,14 +357,14 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 <body class="ft-page">
 <nav>
     <ul>
-        <li id="profile-btn"><a href="<?= BASE_PATH ?>/profile.php"><button class="btn">Profile</button></a></li>
-        <li><a href="<?= BASE_PATH ?>/"><button class="btn">Home</button></a></li>
-        <li><a href="<?= BASE_PATH ?>/dashboard.php"><button class="btn">Dashboard</button></a></li>
-        <li><a href="<?= BASE_PATH ?>/budgets.php"><button class="btn">Budgets</button></a></li>
-        <li><a href="<?= BASE_PATH ?>/expenses.php"><button class="btn">Expenses</button></a></li>
-        <li><a href="<?= BASE_PATH ?>/groups.php"><button class="btn">Groups</button></a></li>
-        <li><a href="<?= BASE_PATH ?>/messages.php"><button class="btn">Messages</button></a></li>
-        <li><a href="<?= BASE_PATH ?>/auth/logout.php"><button class="btn">Logout</button></a></li>
+        <li id="profile-btn"><a href="<?= BASE_PATH ?>/profile.php"><button class="btn" aria-label="profile">Profile</button></a></li>
+        <li><a href="<?= BASE_PATH ?>/"><button class="btn" aria-label="home">Home</button></a></li>
+        <li><a href="<?= BASE_PATH ?>/dashboard.php"><button class="btn" aria-label="dashboard">Dashboard</button></a></li>
+        <li><a href="<?= BASE_PATH ?>/budgets.php"><button class="btn" aria-label="budgets">Budgets</button></a></li>
+        <li><a href="<?= BASE_PATH ?>/expenses.php"><button class="btn" aria-label="expenses">Expenses</button></a></li>
+        <li><a href="<?= BASE_PATH ?>/groups.php"><button class="btn" aria-label="groups">Groups</button></a></li>
+        <li><a href="<?= BASE_PATH ?>/messages.php"><button class="btn" aria-label="messages">Messages</button></a></li>
+        <li><a href="<?= BASE_PATH ?>/auth/logout.php"><button class="btn" aria-label="logout">Logout</button></a></li>
     </ul>
 </nav>
 
