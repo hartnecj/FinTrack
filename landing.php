@@ -30,48 +30,48 @@ if (!empty($_SESSION['user_id'])) {
     
     <nav><!-- navigation section -->
       <ul>
-        <li><a href="<?= BASE_PATH ?>/landing.php"><button class="btn page-btn">Home</button></a></li>
-        <li><a href="<?= BASE_PATH ?>/auth/login.php"><button class="btn page-btn">Login</button></a></li>
-        <li><a href="<?= BASE_PATH ?>/auth/register.php"><button class="btn page-btn">Register</button></a></li>
+        <li><a href="<?= BASE_PATH ?>/landing.php"><button class="btn page-btn" aria-label="home">Home</button></a></li>
+        <li><a href="<?= BASE_PATH ?>/auth/login.php"><button class="btn page-btn" aria-label="login">Login</button></a></li>
+        <li><a href="<?= BASE_PATH ?>/auth/register.php"><button class="btn page-btn" aria-label="register">Register</button></a></li>
       </ul>
     </nav><!-- end navigation-->
 
     <!-- main section -->
     <section class="main-container shadow-lg main-container-home container-lg carousel slide" id="featured-images" data-bs-ride="carousel">
         <div class="carousel-indicators">
-          <button type="button" class="active" data-bs-target="#featured-images" data-bs-slide-to="0"></button>
-          <button type="button"                data-bs-target="#featured-images" data-bs-slide-to="1"></button>
-          <button type="button"                data-bs-target="#featured-images" data-bs-slide-to="2"></button>
+          <button type="button" class="active" data-bs-target="#featured-images" data-bs-slide-to="0" aria-label="button to slide 0"></button>
+          <button type="button"                data-bs-target="#featured-images" data-bs-slide-to="1" aria-label="button to slide 1"></button>
+          <button type="button"                data-bs-target="#featured-images" data-bs-slide-to="2" aria-label="button to slide 2"></button>
         </div><!-- end carousel-indicators buttons-->
         <div class="carousel-inner">
           
           <div class="carousel-item active"><!-- carousel item 1 -->
-            <div class="row align-items-center" id="image-1">
+            <div class="row align-items-center" id="image-1" alt="finance image">
               <div class="col text-center carousel-text text-overlay">
                 <h2> Welcome To FinTrac </h2>
                 <h5 class="text-muted">A shared financial tracking tool for groups</h5>
-                <a href="/auth/login.php"><button>Log in</button></a>
+                <a href="/auth/login.php"><button>Log in</button aria-label="login"></a>
               </div>
             </div>  
           </div><!-- end carousel item 1 -->
           
           <div class="carousel-item"><!-- carousel item 2 -->
-            <div class="row align-items-center" id="image-2">
+            <div class="row align-items-center" id="image-2" alt="finance image 2">
               <div class="col text-center carousel-text text-overlay">
                 <h2> Welcome To FinTrac </h2>
                 <h5 class="text-muted">Log In Now</h5>
-                <a href="/auth/login.php"><button>Log in</button></a>
+                <a href="/auth/login.php"><button aria-label="login">Log in</button></a>
               </div>
             </div>
           </div><!-- end carousel-item 2 -->
           
           
           <div class="carousel-item"><!-- carousel-item 3 -->
-            <div class="row align-items-center" id="image-3">
+            <div class="row align-items-center" id="image-3" alt="finance image 3">
               <div class="col text-center carousel-text text-overlay">
                 <h2> Welcome To FinTrac </h2>
                 <h5 class="text-muted">Keep Track of Group expenses conveniently</h5>
-                <a href="/auth/login.php"><button>Log in</button></a>
+                <a href="/auth/login.php"><button aria-label="login">Log in</button></a>
               </div>
             </div>
           </div><!-- end carousel-item 3 -->
@@ -92,7 +92,7 @@ if (!empty($_SESSION['user_id'])) {
           <div class="col">
             
             <div class="card" style="width: 18rem;"><!-- start card 1 -->
-              <img src="https://maryrei.codewizardshq.com/CapstoneCSP/images/img4.JPG" class="card-img-top" alt="card 1 image">
+              <img src="/assets/images/IMG_4.JPG" class="card-img-top" alt="card 1 image">
               <div class="card-body">
                 <h5 class="card-title">Free Signup</h5>
                 <p class="card-text">Register to start tracking budgets</p>
@@ -103,7 +103,7 @@ if (!empty($_SESSION['user_id'])) {
           
           <div class="col">
             <div class="card" style="width: 18rem;"><!-- start card 2 -->
-              <img src="https://maryrei.codewizardshq.com/CapstoneCSP/images/img4.JPG" class="card-img-top" alt="card 1 image">
+              <img src="/assets/images/IMG_4.JPG" class="card-img-top" alt="card 2 image">
               <div class="card-body">
                 <h5 class="card-title">Connect with groups</h5>
                 <p class="card-text">Groups and shared budget features</p>
@@ -114,7 +114,7 @@ if (!empty($_SESSION['user_id'])) {
           
           <div class="col">
             <div class="card" style="width: 18rem;"><!-- start card 3 -->
-              <img src="https://maryrei.codewizardshq.com/CapstoneCSP/images/img4.JPG" class="card-img-top" alt="card 1 image">
+              <img src="/assets/images/IMG_4.JPG" class="card-img-top" alt="card 3 image">
               <div class="card-body">
                 <h5 class="card-title">Budgets</h5>
                 <p class="card-text">Visualize spending</p>
