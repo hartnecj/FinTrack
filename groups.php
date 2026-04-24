@@ -254,8 +254,8 @@ if ($active_group) {
 
             <div class="d-grid gap-2" style="max-width: 300px; margin: 30px auto;">
                 <!-- NOTE: Corrected path to match actual project structure (BASE_PATH) -->
-                <a href="<?= BASE_PATH ?>/groups/create.php"><button class="btn w-100">Create a Group</button></a>
-                <a href="<?= BASE_PATH ?>/groups/join.php"><button class="btn w-100">Join a Group</button></a>
+                <a href="<?= BASE_PATH ?>/groups/create.php"><button class="btn w-100" aria-label="create group">Create a Group</button></a>
+                <a href="<?= BASE_PATH ?>/groups/join.php"><button class="btn w-100" aria-label="join group">Join a Group</button></a>
             </div>
 
         <?php else: ?>
@@ -265,9 +265,9 @@ if ($active_group) {
                 <?php foreach ($user_groups as $g): ?>
                     <!-- NOTE: Corrected path to match actual project structure (BASE_PATH) -->
                     <form method="post" action="<?= BASE_PATH ?>/groups.php" style="margin: 0;">
-                        <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($_SESSION['csrf_token']); ?>">
-                        <input type="hidden" name="action" value="set_active">
-                        <input type="hidden" name="group_id" value="<?php echo (int)$g['id']; ?>">
+                        < type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($_SESSION['csrf_token']); ?>">
+                        < type="hidden" name="action" value="set_active">
+                        < type="hidden" name="group_id" value="<?php echo (int)$g['id']; ?>">
                         <button type="submit" class="btn w-100" <?php echo ((int)$g['id'] === $active_group_id) ? 'disabled' : ''; ?>>
                             <?php echo htmlspecialchars($g['name']); ?>
                             <?php echo ((int)$g['id'] === $active_group_id) ? ' (Active)' : ''; ?>
@@ -278,8 +278,8 @@ if ($active_group) {
 
             <div style="margin-top: 20px;">
                 <!-- NOTE: Corrected path to match actual project structure (BASE_PATH) -->
-                <a href="<?= BASE_PATH ?>/groups/create.php"><button class="btn">Create another group</button></a>
-                <a href="<?= BASE_PATH ?>/groups/join.php"><button class="btn">Join another group</button></a>  
+                <a href="<?= BASE_PATH ?>/groups/create.php"><button class="btn" aria-label="create group">Create another group</button></a>
+                <a href="<?= BASE_PATH ?>/groups/join.php"><button class="btn" aria-label="join group">Join another group</button></a>  
             </div>
 
             <?php if ($active_group): ?>
@@ -322,11 +322,11 @@ if ($active_group) {
                                     <?php if ((int)$member['id'] !== $user_id): ?>
                                         <!-- NOTE: Corrected path to match actual project structure (BASE_PATH) -->
                                         <form method="post" action="<?= BASE_PATH ?>/groups.php" style="display: inline;">
-                                            <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($_SESSION['csrf_token']); ?>">
-                                            <input type="hidden" name="action" value="remove_member">
-                                            <input type="hidden" name="group_id" value="<?php echo (int)$active_group['id']; ?>">
-                                            <input type="hidden" name="member_id" value="<?php echo (int)$member['id']; ?>">
-                                            <button type="submit" class="btn btn-sm" onclick="return confirm('Remove this member?')">Remove</button>
+                                            < type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($_SESSION['csrf_token']); ?>">
+                                            < type="hidden" name="action" value="remove_member">
+                                            < type="hidden" name="group_id" value="<?php echo (int)$active_group['id']; ?>">
+                                            < type="hidden" name="member_id" value="<?php echo (int)$member['id']; ?>">
+                                            <button type="submit" class="btn btn-sm" aria-label="remove group member" onclick="return confirm('Remove this member?')">Remove</button>
                                         </form>
                                     <?php endif; ?>
                                 </td>
@@ -340,17 +340,17 @@ if ($active_group) {
                     <?php if (!$is_owner): ?>
                         <!-- NOTE: Corrected path to match actual project structure (BASE_PATH) -->
                         <form method="post" action="<?= BASE_PATH ?>/groups.php" style="display: inline;">
-                            <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($_SESSION['csrf_token']); ?>">
-                            <input type="hidden" name="action" value="leave_group">
-                            <input type="hidden" name="group_id" value="<?php echo (int)$active_group['id']; ?>">
-                            <button type="submit" class="btn" onclick="return confirm('Leave this group?')">Leave Group</button>
+                            < type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($_SESSION['csrf_token']); ?>">
+                            < type="hidden" name="action" value="leave_group">
+                            < type="hidden" name="group_id" value="<?php echo (int)$active_group['id']; ?>">
+                            <button type="submit" class="btn" aria-label="leave group" onclick="return confirm('Leave this group?')">Leave Group</button>
                         </form>
                     <?php else: ?>
                         <!-- NOTE: Corrected path to match actual project structure (BASE_PATH) -->
                         <form method="post" action="<?= BASE_PATH ?>/groups.php" style="display: inline;">
-                            <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($_SESSION['csrf_token']); ?>">
-                            <input type="hidden" name="action" value="delete_group">
-                            <input type="hidden" name="group_id" value="<?php echo (int)$active_group['id']; ?>">
+                            < type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($_SESSION['csrf_token']); ?>">
+                            < type="hidden" name="action" value="delete_group">
+                            < type="hidden" name="group_id" value="<?php echo (int)$active_group['id']; ?>">
                             <button type="submit" class="btn" onclick="return confirm('Delete the group for all members?')">Delete Group</button>
                         </form>
                     <?php endif; ?>
