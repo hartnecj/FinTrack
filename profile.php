@@ -310,14 +310,14 @@ function edit_profile(){
         <!-- navigation section -->
     <nav>
         <ul>
-            <li id="profile-btn"><a href="#"><button class="btn">Profile</button></a></li>
-            <li><a href="<?= BASE_PATH ?>/"><button class="btn">Home</button></a></li>
-            <li><a href="<?= BASE_PATH ?>/dashboard.php"><button class="btn">Dashboard</button></a></li>
-            <li><a href="<?= BASE_PATH ?>/budgets.php"><button class="btn">Budgets</button></a></li>
-            <li><a href="<?= BASE_PATH ?>/expenses.php"><button class="btn">Expenses</button></a></li>
-            <li><a href="<?= BASE_PATH ?>/groups.php"><button class="btn">Groups</button></a></li>
-            <li><a href="<?= BASE_PATH ?>/messages.php"><button class="btn">Messages</button></a></li>
-            <li><a href="<?= BASE_PATH ?>/auth/logout.php"><button class="btn">Logout</button></a></li>
+            <li id="profile-btn"><a href="#"><button class="btn" aria-label="profile">Profile</button></a></li>
+            <li><a href="<?= BASE_PATH ?>/"><button class="btn" aria-label="home">Home</button></a></li>
+            <li><a href="<?= BASE_PATH ?>/dashboard.php"><button class="btn" aria-label="dashboard">Dashboard</button></a></li>
+            <li><a href="<?= BASE_PATH ?>/budgets.php"><button class="btn" aria-label="budgets">Budgets</button></a></li>
+            <li><a href="<?= BASE_PATH ?>/expenses.php"><button class="btn" aria-label="expenses">Expenses</button></a></li>
+            <li><a href="<?= BASE_PATH ?>/groups.php"><button class="btn" aria-label="groups">Groups</button></a></li>
+            <li><a href="<?= BASE_PATH ?>/messages.php"><button class="btn" aria-label="messages">Messages</button></a></li>
+            <li><a href="<?= BASE_PATH ?>/auth/logout.php"><button class="btn" aria-label="logout">Logout</button></a></li>
         </ul>
     </nav>
 
@@ -399,14 +399,14 @@ function edit_profile(){
                                 </fieldset>
                                 <!-- submit button/cancel button/hidden input -->
                                 <input type="hidden" name="editing" value="0">
-                                <button type="submit" class="btn w-100" name="edit_profile" id="submit-profile-btn" value="1">Submit</button>
-                                <a href="<?= BASE_PATH ?>/profile.php"><button type="submit" class="btn w-100" formnovalidate>Cancel</button></a>
+                                <button type="submit" class="btn w-100" name="edit_profile" id="submit-profile-btn" value="1" aria-label="submit changes">Submit</button>
+                                <a href="<?= BASE_PATH ?>/profile.php"><button type="submit" class="btn w-100" aria-label="cancel edit" formnovalidate>Cancel</button></a>
                             </form>
                             
                             <!-- this is the section that shows if editing is not toggled to true -->
                             <?php else: ?>
                             <form method="POST" action="">
-                                <a href="<?= BASE_PATH ?>/profile.php"><button type="submit" class="btn w-100" id="edit-profile">edit profile</button></a>
+                                <a href="<?= BASE_PATH ?>/profile.php"><button type="submit" class="btn w-100" id="edit-profile" aria-label="edit">edit profile</button></a>
                                     
                                 <input type="hidden" name="editing" value="1">
                             </form>
@@ -471,7 +471,7 @@ function edit_profile(){
             <!-- ability to leave group shown if there is active group membership -->
             <?php if($active_group): ?>
                 <form method="POST" action="<?php echo $_SERVER['PHP_SELF']; ?>">
-                    <button class="btn w-100" type="submit" name="leave_group" value="1">Leave group</button>
+                    <button class="btn w-100" type="submit" name="leave_group" value="1" aria-label="leave">Leave group</button>
                 </form>
             <?php endif; ?>
 
