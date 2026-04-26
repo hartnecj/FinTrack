@@ -249,8 +249,12 @@ $all_progress_bars = [];
         .progress{
             background-color: black;
             width: 100%;
+            
+            text-align: center;
         }
-        
+        .progress-bar{
+            color: white;
+        }
     </style>
 </head>
 <body class="ft-page">
@@ -387,7 +391,7 @@ $all_progress_bars = [];
                                 echo "&nbsp;";
                                 $all_progress_bars[] = [$total_budget_spent, $total_budget_remaining];
                                 ?>
-                                <div class="progress col-md-4"><div class="progress-bar">Budget Used <?php echo ($total_budget_spent / ($total_budget_spent + $total_budget_remaining) * 100); ?>%</div></div>
+                                <div class="progress col-md-4"><div class="progress-bar"><?php echo ($total_budget_spent / ($total_budget_spent + $total_budget_remaining) * 100); ?>%</div></div>
                                 </p>
                                 
                                 <?php if($total_budget_remaining <= 0): ?>
