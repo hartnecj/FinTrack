@@ -327,12 +327,12 @@ $expenses = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <div class="row">
           <div class="col-md-6 mb-3">
             <label class="form-label">Amount</label>
-            <input type="number" step="0.01" min="0.01" class="form-control" name="amount" value="<?= htmlspecialchars($expense['amount'] ?? ''); ?>" aria-label="expense amount" required>
+            <input type="number" step="0.01" min="0.01" class="form-control" name="amount" value="<?= htmlspecialchars($expense['amount'] ?? ''); ?>" required>
           </div>
 
           <div class="col-md-6 mb-3">
             <label class="form-label">Expense Date</label>
-            <input type="date" class="form-control" name="expense_date" required value="<?= htmlspecialchars($expense['expense_date'] ?? ''); ?>" aria-label="expense date">
+            <input type="date" class="form-control" name="expense_date" required value="<?= htmlspecialchars($expense['expense_date'] ?? ''); ?>">
           </div>
 
           <div class="col-md-12 mb-3">
@@ -349,18 +349,18 @@ $expenses = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
           <div class="col-md-8 mb-3">
                 <label class="form-label">Category (optional)</label>
-                <input type="text" class="form-control" name="category" placeholder="Groceries" aria-label="expense category" value="<?= htmlspecialchars($expense['category'] ?? ''); ?>">
+                <input type="text" class="form-control" name="category" value="<?php echo htmlspecialchars($expense['category'] ?? ''); ?>"></td> 
             </div>
                 
             <div class="col-md-4 mb-3">
                 <label class="form-label">Personal? (optional)</label><br>
-                <input type="checkbox" class="form-check-input" name="personal" value="1" aria-label="personal?" >
+                <input type="checkbox" class="form-check-input" name="personal" value="1" >
             </div>
-
+           
 
           <div class="col-md-12 mb-3">
             <label class="form-label">Description (optional)</label>
-            <input type="text" class="form-control" name="description" value="<?= htmlspecialchars($expense['description'] ?? ''); ?>" aria-label="expense description" >
+            <input type="text" class="form-control" name="description" value="<?= htmlspecialchars($expense['description'] ?? ''); ?>" >
           </div>
         </div>
      
