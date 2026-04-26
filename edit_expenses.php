@@ -349,7 +349,7 @@ $expenses = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
           <div class="col-md-8 mb-3">
                 <label class="form-label">Category (optional)</label>
-                <input type="text" class="form-control" name="category" placeholder="Groceries" aria-label="expense category" >
+                <input type="text" class="form-control" name="category" placeholder="Groceries" aria-label="expense category" value="<?= htmlspecialchars($expense['category'] ?? ''); ?>">
             </div>
                 
             <div class="col-md-4 mb-3">
