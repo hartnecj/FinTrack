@@ -225,6 +225,15 @@ $stmt = $pdo->prepare("
 ");
 $stmt->execute([$group_id]);
 $budgets = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+$stmt = $pdo->prepare("
+    SELECT * FROM expenses
+    WHERE group_id = ? AND budget_id IS NOT NULL
+");
+$stmt->execute([$group_id]);
+$expenses = $stmt->fetchAll(PDO::FETCH_ASSOC);
+$total_budgets = 0;
+$all_progress_bars = [];
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -236,6 +245,13 @@ $budgets = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     <!-- NOTE: Corrected path to match actual project structure (BASE_PATH) -->
     <link rel="stylesheet" href="<?= BASE_PATH ?>/assets/style.css?v=5">
+    <style>
+        .progress{
+            background-color: black;
+            width: 100%;
+        }
+        
+    </style>
 </head>
 <body class="ft-page">
 <nav>
@@ -322,6 +338,7 @@ $budgets = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 </thead>
                 <tbody>
                 <?php foreach ($budgets as $b): ?>
+                    <?php $total_budgets = $total_budgets + 1; ?>
                     <tr>
                         <td><?php echo htmlspecialchars($b['name']); ?></td>
                         <td><?php echo htmlspecialchars($b['category']); ?></td>
@@ -348,6 +365,35 @@ $budgets = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                 <button type="button" class="btn btn-sm btn-primary">Edit</button>
                             </a>
                             
+
+                        </td>
+                        
+                    </tr>
+                    <tr>
+                        <td colspan='7'>
+                            <?php $total_budget_spent = 0; $total_budget_remaining=0; ?>
+                            <?php foreach($expenses as $e): ?>
+                            
+                              
+                              
+                              <?php if ($e['budget_id'] == $b['id']): ?>
+                                  <?php $total_budget_spent = $total_budget_spent + (float)$e['amount']; ?>
+                              <?php endif; ?>
+                            <?php endforeach; ?>
+                            <?php if ($total_budget_spent != 0): ?>
+                                <p>Amount spent: $<?php echo number_format($total_budget_spent, 2); 
+                                echo "&nbsp;&nbsp;&nbsp;&nbsp;Budget remaining:&nbsp;$"; 
+                                echo number_format($total_budget_remaining = (float)$b['amount_limit'] - $total_budget_spent, 2); 
+                                echo "&nbsp;";
+                                $all_progress_bars[] = [$total_budget_spent, $total_budget_remaining];
+                                ?>
+                                <div class="progress col-md-4"><div class="progress-bar">Budget Used <?php echo ($total_budget_spent / ($total_budget_spent + $total_budget_remaining) * 100); ?>%</div></div>
+                                </p>
+                                
+                                <?php if($total_budget_remaining <= 0): ?>
+                                    <span style="color: red">BUDGET EXCEEDED</span>
+                                <?php endif; ?>
+                            <?php endif; ?>
                         </td>
                     </tr>
                 <?php endforeach; ?>
@@ -369,6 +415,34 @@ $budgets = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 <!-- NOTE: Correct path (your project uses /assets/pageCustomization.js, not /assets/js/pageCustomization.js) -->
  <!-- NOTE: Corrected path to match actual project structure (BASE_PATH) -->
-<script src="<?= BASE_PATH ?>/assets/pageCustomization.js"></script>
+ <script>
+     const expenses = <?php echo json_encode($expenses); ?>;
+     const budgets  = <?php echo json_encode($budgets); ?>;
+     const allProgressBars = <?php echo json_encode($all_progress_bars); ?>;
+     const totalExpenses = expenses.length;
+     let progressBars = $('.progress-bar');
+     console.log(expenses);
+     console.log(totalExpenses)
+     console.log(progressBars.length);
+     for(let i=0; i<allProgressBars.length; i++){
+         let budget_amount = parseFloat(allProgressBars[i][0]) + parseFloat(allProgressBars[i][1]);
+         let width = (parseFloat(allProgressBars[i][0]) / budget_amount) * 100
+         console.log(width)
+         let backgroundColor = "rgb(55, 101, 176)";
+         if(parseFloat(allProgressBars[i][0]) > budget_amount){
+             width = 100;
+         } else if ( width > 50 && width < 75){
+            backgroundColor = "rgb(217, 191, 63)" 
+         } else if (width > 75){
+             backgroundColor = 'rgb(189, 74, 57)'
+         }
+         let percentageObject = {
+            "width": width + "%",
+            "background-color": backgroundColor
+         }
+         $(progressBars[i]).css(percentageObject);
+     }
+ </script>
+<!--<script src="<?= BASE_PATH ?>/assets/pageCustomization.js"></script>-->
 </body>
 </html>
