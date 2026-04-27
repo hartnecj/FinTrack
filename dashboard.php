@@ -16,6 +16,7 @@ $balances = [];
 $suggested_settlements = [];
 $payment_history = [];
 $group_members = [];
+$active_budgets = [];
 $error = '';
 $success = '';
 
@@ -192,6 +193,36 @@ if ($group_id > 0 && $active_group) {
     $balances = get_group_balances($pdo, $group_id);
     $suggested_settlements = get_settlements_from_balances($balances);
     $payment_history = get_group_payment_history($pdo, $group_id, 10);
+    $stmt = $pdo->prepare("
+    SELECT
+        b.id,
+        b.name,
+        b.category,
+        b.amount_limit,
+        b.start_date,
+        b.end_date,
+        COALESCE(SUM(e.amount), 0) AS spent
+    FROM budgets b
+    LEFT JOIN expenses e
+        ON e.budget_id = b.id
+        AND e.group_id = b.group_id
+        AND e.expense_date >= b.start_date
+        AND e.expense_date <= b.end_date
+    WHERE b.group_id = ?
+      AND b.start_date <= CURDATE()
+      AND b.end_date >= CURDATE()
+    GROUP BY
+        b.id,
+        b.name,
+        b.category,
+        b.amount_limit,
+        b.start_date,
+        b.end_date
+    ORDER BY b.end_date ASC, b.name ASC
+    LIMIT 5
+");
+$stmt->execute([$group_id]);
+$active_budgets = $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 ?>
 <!DOCTYPE html>
@@ -363,6 +394,118 @@ if ($group_id > 0 && $active_group) {
                     </div>
                 </div>
             </div>
+
+            <!-- Active Budgets -->
+        <div class="row" style="margin-top: 20px;">
+        <div class="col-lg-12 mb-3">
+            <div class="card shadow-sm balance-card">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <div>
+                            <h5 class="card-title mb-1">Currently Active Budgets</h5>
+                            <small class="empty-note">Budgets active for today</small>
+                        </div>
+                        <a href="<?= BASE_PATH ?>/budgets.php">
+                            <button type="button" class="btn btn-sm">View Budgets</button>
+                        </a>
+                    </div>
+
+                    <?php if (empty($active_budgets)): ?>
+                        <p class="empty-note mb-0">No budgets are currently active.</p>
+                    <?php else: ?>
+                        <div class="row">
+                            <?php foreach ($active_budgets as $budget): ?>
+                                <?php
+                                    $limit = (float)($budget['amount_limit'] ?? 0);
+                                    $spent = (float)($budget['spent'] ?? 0);
+                                    $remaining = $limit - $spent;
+
+                                    $percent = 0;
+                                    if ($limit > 0) {
+                                        $percent = ($spent / $limit) * 100;
+                                    }
+
+                                    $display_percent = min($percent, 100);
+
+                                    if ($percent >= 100) {
+                                        $bar_class = "bg-danger";
+                                        $status_label = "Over Budget";
+                                        $status_class = "bg-danger";
+                                    } elseif ($percent >= 75) {
+                                        $bar_class = "bg-warning";
+                                        $status_label = "Close";
+                                        $status_class = "bg-warning text-dark";
+                                    } else {
+                                        $bar_class = "bg-success";
+                                        $status_label = "On Track";
+                                        $status_class = "bg-success";
+                                    }
+                                ?>
+
+                                <div class="col-lg-6 mb-3">
+                                    <div class="p-3 rounded" style="background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.08);">
+                                        <div class="d-flex justify-content-between align-items-start">
+                                            <div>
+                                                <h6 class="text-white mb-1">
+                                                    <?php echo htmlspecialchars($budget['name']); ?>
+                                                </h6>
+                                                <small class="empty-note">
+                                                    <?php echo htmlspecialchars($budget['category'] ?? 'Uncategorized'); ?>
+                                                    •
+                                                    <?php echo htmlspecialchars(date('M j', strtotime($budget['start_date']))); ?>
+                                                    -
+                                                    <?php echo htmlspecialchars(date('M j', strtotime($budget['end_date']))); ?>
+                                                </small>
+                                            </div>
+
+                                            <span class="badge <?php echo $status_class; ?>">
+                                                <?php echo htmlspecialchars($status_label); ?>
+                                            </span>
+                                        </div>
+
+                                        <div class="mt-3">
+                                            <div class="d-flex justify-content-between">
+                                                <small class="text-white">
+                                                    Spent: $<?php echo number_format($spent, 2); ?>
+                                                </small>
+                                                <small class="text-white">
+                                                    Limit: $<?php echo number_format($limit, 2); ?>
+                                                </small>
+                                            </div>
+
+                                            <div class="progress mt-2" style="height: 12px; background: rgba(255,255,255,0.15);">
+                                                <div
+                                                    class="progress-bar <?php echo $bar_class; ?>"
+                                                    role="progressbar"
+                                                    style="width: <?php echo htmlspecialchars((string)$display_percent); ?>%;"
+                                                    aria-valuenow="<?php echo htmlspecialchars((string)$display_percent); ?>"
+                                                    aria-valuemin="0"
+                                                    aria-valuemax="100">
+                                                </div>
+                                            </div>
+
+                                            <div class="mt-2">
+                                                <?php if ($remaining >= 0): ?>
+                                                    <small class="empty-note">
+                                                        Remaining: $<?php echo number_format($remaining, 2); ?>
+                                                    </small>
+                                                <?php else: ?>
+                                                    <small class="text-danger">
+                                                        Over by $<?php echo number_format(abs($remaining), 2); ?>
+                                                    </small>
+                                                <?php endif; ?>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            <?php endforeach; ?>
+                        </div>
+                    <?php endif; ?>
+                </div>
+            </div>
+        </div>
+    </div>
+
 
             <div class="row" style="margin-top: 20px;">
                 <div class="col-lg-12 mb-3">
