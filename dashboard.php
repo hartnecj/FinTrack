@@ -357,6 +357,33 @@ $active_budgets = $stmt->fetchAll(PDO::FETCH_ASSOC);
                             </div>
                         </div>
                     </div>
+            </div>
+
+            <div class="col-lg-6 mb-3">
+                    <div class="card shadow-sm balance-card">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <h5 class="card-title mb-1">Spending Over Time</h5>
+                                    <small class="empty-note">Last 180 days by month</small>
+                                </div>
+                                <div class="text-end">
+                                    <small class="empty-note">Total</small>
+                                    <div class="fw-bold text-white" id="ftLineTotal">$0.00</div>
+                                </div>
+                            </div>
+
+                            <div class="mt-3" style="height: 320px;">
+                                <canvas id="ftSpendingLine"></canvas>
+                            </div>
+
+                            <div class="mt-3" id="ftLineEmptyState" style="display:none;">
+                                <div class="alert alert-secondary mb-0">
+                                    No spending data found for this period yet.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -626,7 +653,6 @@ $active_budgets = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                 <button type="submit" class="btn">Record Payment</button>
                             </form>
                         </div>
-                    </div>
                 </div>
 
                 <div class="col-lg-6 mb-3">
@@ -763,7 +789,7 @@ $active_budgets = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         legend: {
                             position: "bottom",
                             labels: {
-                                color: "#ffffff",
+                                color: "white",
                                 font: { size: 14 }
                             }
                         },
@@ -787,6 +813,118 @@ $active_budgets = $stmt->fetchAll(PDO::FETCH_ASSOC);
             if (emptyEl) {
                 emptyEl.style.display = "block";
                 emptyEl.innerHTML = `<div class="alert alert-warning mb-0">Unable to load chart data.</div>`;
+            }
+        });
+})();
+</script>
+
+<script>
+(() => {
+    const canvas = document.getElementById("ftSpendingLine");
+    if (!canvas) return;
+
+    const totalEl = document.getElementById("ftLineTotal");
+    const emptyEl = document.getElementById("ftLineEmptyState");
+
+    const range = "180d";
+
+    fetch(`<?= BASE_PATH ?>/backend/expenses_line_chart.php?range=${encodeURIComponent(range)}`)
+        .then((res) => res.json())
+        .then((data) => {
+            if (data.error) {
+                canvas.parentElement.style.display = "none";
+
+                if (emptyEl) {
+                    emptyEl.style.display = "block";
+                    emptyEl.innerHTML = `<div class="alert alert-warning mb-0">${data.error}</div>`;
+                }
+
+                return;
+            }
+
+            const labels = data.labels || [];
+            const values = data.values || [];
+            const total = Number(data.total || 0);
+
+            if (totalEl) {
+                totalEl.textContent = `$${total.toFixed(2)}`;
+            }
+
+            if (!labels.length) {
+                canvas.parentElement.style.display = "none";
+
+                if (emptyEl) {
+                    emptyEl.style.display = "block";
+                }
+
+                return;
+            }
+
+            if (window.ftSpendingLineChart) {
+                window.ftSpendingLineChart.destroy();
+            }
+
+            window.ftSpendingLineChart = new Chart(canvas.getContext("2d"), {
+                type: "line",
+                data: {
+                    labels,
+                    datasets: [{
+                        label: "Monthly Spending",
+                        data: values,
+                        borderWidth: 3,
+                        pointRadius: 4,
+                        tension: 0.25
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: {
+                            ticks: {
+                                color: "white"
+                            },
+                            grid: {
+                                color: "rgba(255,255,255,0.08)"
+                            }
+                        },
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                color: "white",
+                                callback: function(value) {
+                                    return "$" + value;
+                                }
+                            },
+                            grid: {
+                                color: "rgba(255,255,255,0.08)"
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            labels: {
+                                color: "white"
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const value = Number(context.raw || 0);
+                                    return `Spending: $${value.toFixed(2)}`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        })
+        .catch(() => {
+            canvas.parentElement.style.display = "none";
+
+            if (emptyEl) {
+                emptyEl.style.display = "block";
+                emptyEl.innerHTML = `<div class="alert alert-warning mb-0">Unable to load line chart data.</div>`;
             }
         });
 })();
