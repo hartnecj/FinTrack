@@ -230,7 +230,6 @@ $budget = $stmt->fetch(PDO::FETCH_ASSOC);
 <head>
     <title>FinTrack - Budgets</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <script src="https://code.jquery.com/jquery-4.0.0.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <!-- NOTE: Correct path (your project uses /assets/style.css, not /assets/css/style.css) -->
@@ -312,14 +311,5 @@ $budget = $stmt->fetch(PDO::FETCH_ASSOC);
     </div>
 </section>
 
-<footer>
-    <div class="form-check form-switch">
-        <input class="form-check-input" type="checkbox" role="switch" id="styleSwitch">
-        <label class="form-check-label" for="styleSwitch" id="styleLabel"> Light mode: On </label>
-    </div>
-</footer>
-
-<!-- NOTE: Correct path (your project uses /assets/pageCustomization.js, not /assets/js/pageCustomization.js) -->
-<script src="/assets/pageCustomization.js"></script>
 </body>
 </html>

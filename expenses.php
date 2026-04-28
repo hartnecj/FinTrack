@@ -535,13 +535,6 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     </div>
 </section>
 
-<footer>
-    <div class="form-check form-switch">
-        <input class="form-check-input" type="checkbox" role="switch" id="styleSwitch">
-        <label class="form-check-label" for="styleSwitch" id="styleLabel"> Light mode: On </label>
-    </div>
-</footer>
-
 <script>
 (function () {
     const splitType = document.getElementById('split_type');
@@ -571,6 +564,5 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 })();
 </script>
 
-<script src="<?= BASE_PATH ?>/assets/pageCustomization.js"></script>
 </body>
 </html>

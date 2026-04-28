@@ -13,31 +13,6 @@
   --btn-hover-color:                  rgba(66,143,242, .5);
 }
 
-/* darkMode css variables */
-.darkMode{
-  --bg-color:                                      #121212;
-  --text-color:                                      black;
-  --focus-color:                                   #888888;
-  --div-color:                                     #444444;
-  --link-color:                                      black;
-  --signup-color:                                    white;
-  --btn-color:                                     #121212;
-  --btn-hover-color:                                      ;
-}
-
-/* light mode css variables */
-.lightMode{
-  --bg-color:                       rgba(145,182,235, 0.8);
-  --text-color:                                      white;
-  --focus-color:                                      blue;
-  --div-color:                       rgba(66,143,242, 0.8);
-  --link-color:                                      white;
-  --signup-color:                                    white;
-  --border-color:                     rgba(0, 8, 103, 0.8);
-  --btn-color:                        #CCCFDC;
-  --btn-hover-color: ;
-}
-
 /*--------- E N D  C S S  V A R I A B L E S ----------*/
 
 body{
@@ -61,8 +36,8 @@ body{
   box-shadow:             3px 6px 17px 6px rgba(0,0,0,0.7);
 }
 
-/* shared styles between the navigation and footer */
-nav, footer{
+/* navigation styling */
+nav{
   position:                                          fixed;
   width:                                              100%;
   background-color:                       var(--div-color);
@@ -113,23 +88,9 @@ section{
   margin-top:                                         10vh;
 }
 
-/* footer specific styling */
-footer{
-  bottom:                                                0;
-}
-
 nav{
   top:                                                   0;
   z-index:                                               1;
-}
-/* styling for every child element of the footer tag */
-footer > *{
-  padding-left:                                         4%;
-  padding-right:                                        2%;
-}
-/* dark mode toggle styling */
-#styleSwitch{
-  background-color:                          var(--btn-bg);
 }
 
 form{

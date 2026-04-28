@@ -302,7 +302,6 @@ function edit_profile(){
 
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <script src="https://code.jquery.com/jquery-4.0.0.js" integrity="sha256-9fsHeVnKBvqh3FB2HYu7g2xseAZ5MlN6Kz/qnkASV8U=" crossorigin="anonymous"></script>
         <!-- NOTE: updated CSS 2/16/26 -->
         <link rel="stylesheet" href="<?= BASE_PATH ?>/assets/style.css?v=5">
     </head>
@@ -475,21 +474,9 @@ function edit_profile(){
                 </form>
             <?php endif; ?>
 
-
-
             <?php endif; ?><!-- end of active group section -->
             </div>
         </section>
-
-        <footer>
-            <div class="form-check form-switch">
-                <input class="form-check-input" type="checkbox" role="switch" id="styleSwitch">
-                <label class="form-check-label" for="styleSwitch" id="styleLabel"> Light mode: On </label>
-            </div>
-        </footer>
-
-
-
-        <script src="<?= BASE_PATH ?>/assets/pageCustomization.js"></script>
+        
     </body>
 </html>

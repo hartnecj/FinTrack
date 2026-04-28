@@ -727,13 +727,6 @@ $active_budgets = $stmt->fetchAll(PDO::FETCH_ASSOC);
     </div>
 </section>
 
-<footer>
-    <div class="form-check form-switch">
-        <input class="form-check-input" type="checkbox" role="switch" id="styleSwitch">
-        <label class="form-check-label" for="styleSwitch" id="styleLabel"> Light mode: On </label>
-    </div>
-</footer>
-
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <script>
 (() => {
@@ -930,6 +923,5 @@ $active_budgets = $stmt->fetchAll(PDO::FETCH_ASSOC);
 })();
 </script>
 
-<script src="<?= BASE_PATH ?>/assets/pageCustomization.js"></script>
 </body>
 </html>

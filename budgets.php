@@ -410,15 +410,6 @@ $all_progress_bars = [];
     </div>
 </section>
 
-<footer>
-    <div class="form-check form-switch">
-        <input class="form-check-input" type="checkbox" role="switch" id="styleSwitch">
-        <label class="form-check-label" for="styleSwitch" id="styleLabel"> Light mode: On </label>
-    </div>
-</footer>
-
-<!-- NOTE: Correct path (your project uses /assets/pageCustomization.js, not /assets/js/pageCustomization.js) -->
- <!-- NOTE: Corrected path to match actual project structure (BASE_PATH) -->
  <script>
      const expenses = <?php echo json_encode($expenses); ?>;
      const budgets  = <?php echo json_encode($budgets); ?>;
@@ -447,6 +438,5 @@ $all_progress_bars = [];
          $(progressBars[i]).css(percentageObject);
      }
  </script>
-<!--<script src="<?= BASE_PATH ?>/assets/pageCustomization.js"></script>-->
 </body>
 </html>

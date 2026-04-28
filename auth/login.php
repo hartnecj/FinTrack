@@ -41,9 +41,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <title>FinTrack- Login</title>
     <!-- link to bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
-    <!-- link to JQuery -->
-    <script src="https://code.jquery.com/jquery-4.0.0.js" integrity="sha256-9fsHeVnKBvqh3FB2HYu7g2xseAZ5MlN6Kz/qnkASV8U=" crossorigin="anonymous"></script>
-    <!-- meta viewport tag -->
+        <!-- meta viewport tag -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- link to stylesheet -->
     <link rel="stylesheet" href="/assets/style.css">
@@ -84,18 +82,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <!-- end main section -->
     <!-- signup link -->
     <h6 id="signup" class="text-center"><a href="/auth/register.php">New? Sign up</a></h6>
-    
-    <!-- start footer -->
-    <footer>
-      <div class="form-check form-switch">
-        <input class="form-check-input" type="checkbox" role="switch" id="styleSwitch">
-        <label class="form-check-label" for="styleSwitch" id="styleLabel"> Light mode: On </label>
-      </div>
-    </footer><!-- end footer -->
 
-    <!-- link to external JS-->
-    <script src="../assets/pageCustomization.js">     
-    </script>
+      </script>
     
   </body><!-- end body tag -->
 </html><!-- end HTML tag -->

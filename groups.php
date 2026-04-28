@@ -216,7 +216,6 @@ if ($active_group) {
 <head>
     <title>FinTrack - Groups</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <script src="https://code.jquery.com/jquery-4.0.0.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <!-- NOTE: Corrected path to match actual project structure (BASE_PATH) -->
@@ -365,14 +364,5 @@ if ($active_group) {
     </div>
 </section>
 
-<footer>
-    <div class="form-check form-switch">
-        <input class="form-check-input" type="checkbox" role="switch" id="styleSwitch">
-        <label class="form-check-label" for="styleSwitch" id="styleLabel"> Light mode: On </label>
-    </div>
-</footer>
-
-<!-- NOTE: Corrected path to match actual project structure -->
-<script src="<?= BASE_PATH ?>/assets/pageCustomization.js"></script>
 </body>
 </html>
