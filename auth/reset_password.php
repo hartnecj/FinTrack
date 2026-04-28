@@ -62,14 +62,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $reset_row) {
     <title>FinTrack - Reset Password</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="<?= BASE_PATH ?>/assets/style.css?v=5">
+    <link rel="stylesheet" href="/assets/style.css?v=5">
 </head>
 <body class="ft-page">
 
 <nav>
     <ul>
-        <li><a href="<?= BASE_PATH ?>/landing.php"><button class="btn">Home</button></a></li>
-        <li><a href="<?= BASE_PATH ?>/auth/login.php"><button class="btn">Login</button></a></li>
+        <li><a href="/landing.php"><button class="btn">Home</button></a></li>
+        <li><a href="/auth/login.php"><button class="btn">Login</button></a></li>
     </ul>
 </nav>
 
@@ -78,13 +78,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $reset_row) {
 
     <?php if ($success !== ''): ?>
         <div class="alert alert-success"><?= htmlspecialchars($success) ?></div>
-        <a href="<?= BASE_PATH ?>/auth/login.php" class="btn w-100">Go to Login</a>
+        <a href="/auth/login.php" class="btn w-100">Go to Login</a>
 
     <?php elseif ($error !== ''): ?>
         <div class="alert alert-danger"><?= htmlspecialchars($error) ?></div>
 
     <?php else: ?>
-        <form method="POST" action="<?= BASE_PATH ?>/auth/reset_password.php?token=<?= htmlspecialchars($token) ?>">
+        <form method="POST" action="/auth/reset_password.php?token=<?= htmlspecialchars($token) ?>">
             <div class="mb-3">
                 <label for="password">New Password</label>
                 <input type="password" id="password" name="password" class="form-control" required minlength="8">

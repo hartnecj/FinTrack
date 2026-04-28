@@ -72,8 +72,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           <div class="mb-3 input-group">
             <input type="password" id="password" name="password" class="form-control" aria-label="Password input" aria-description="password-input box for entering password"required>
           </div>
-          <!-- forgot password link -->
-          <h6 class="text-center"><a href="#">Forgot password?</a></h6>
+          <h6 class="text-center"><a href="/auth/forgot_password.php">Forgot password?</a></h6>
         </fieldset>
         <!-- submit button -->
         <input type="submit" class="btn" value="Login" id="login-btn">
