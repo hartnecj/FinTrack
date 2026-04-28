@@ -9,6 +9,14 @@
 
 require_once __DIR__ . "/auth_guard.php";
 require_once __DIR__ . "/config/db.php";
+require_once __DIR__ . "/config/mail.php";
+require_once __DIR__ . "/PHPMailer/Exception.php";
+require_once __DIR__ . "/PHPMailer/PHPMailer.php";
+require_once __DIR__ . "/PHPMailer/SMTP.php";
+
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\SMTP;
+use PHPMailer\PHPMailer\Exception;
 
 $user_id      = (int)($_SESSION["user_id"] ?? 0);
 if($user_id > 0){
@@ -210,6 +218,71 @@ function removeGroup(){
     }//end else
 }//end removeGroup()
 
+$reset_sent  = false;
+$reset_error = '';
+
+/*
+|------------------------------------------------------------------------------
+| password reset email handler
+|------------------------------------------------------------------------------
+*/
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['send_reset'])) {
+    $result = send_reset_email();
+    if ($result === true) {
+        $reset_sent = true;
+    } else {
+        $reset_error = $result;
+    }
+}
+/*
+|------------------------------------------------------------------------------
+| password reset email function
+|------------------------------------------------------------------------------
+*/
+function send_reset_email() {
+    global $pdo, $user_id, $email;
+
+    // Clean up any existing tokens for this user
+    $stmt = $pdo->prepare('DELETE FROM password_resets WHERE user_id = ?');
+    $stmt->execute([$user_id]);
+
+    $token      = bin2hex(random_bytes(32));
+    $expires_at = date('Y-m-d H:i:s', time() + 3600);
+
+    $stmt = $pdo->prepare('INSERT INTO password_resets (user_id, token, expires_at) VALUES (?, ?, ?)');
+    $stmt->execute([$user_id, $token, $expires_at]);
+
+    $protocol   = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
+    $reset_link = $protocol . '://' . $_SERVER['HTTP_HOST'] . BASE_PATH . '/auth/reset_password.php?token=' . $token;
+
+    $mail = new PHPMailer(true);
+    try {
+        $mail->isSMTP();
+        $mail->Host       = SMTP_HOST;
+        $mail->SMTPAuth   = true;
+        $mail->Username   = SMTP_USER;
+        $mail->Password   = SMTP_PASS;
+        $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+        $mail->Port       = SMTP_PORT;
+
+        $mail->setFrom(SMTP_FROM, SMTP_FROM_NAME);
+        $mail->addAddress($email);
+        $mail->Subject = 'FinTrack – Password Reset';
+        $mail->isHTML(true);
+        $mail->Body = '
+            <p>You requested a password reset for your FinTrack account.</p>
+            <p><a href="' . htmlspecialchars($reset_link) . '">Click here to reset your password</a></p>
+            <p>This link expires in 1 hour. If you did not request this, you can ignore this email.</p>
+        ';
+        $mail->AltBody = "Reset your FinTrack password: $reset_link\n\nThis link expires in 1 hour.";
+
+        $mail->send();
+        return true;
+    } catch (Exception $e) {
+        return 'Could not send email: ' . $mail->ErrorInfo;
+    }
+}
+
 //sets the editing to false, making the profile editing box hide inputs
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $editing = $_POST['editing'] ?? false;
@@ -406,8 +479,17 @@ function edit_profile(){
                             <?php else: ?>
                             <form method="POST" action="">
                                 <a href="<?= BASE_PATH ?>/profile.php"><button type="submit" class="btn w-100" id="edit-profile" aria-label="edit">edit profile</button></a>
-                                    
                                 <input type="hidden" name="editing" value="1">
+                            </form>
+
+                            <?php if ($reset_sent): ?>
+                                <div class="alert alert-success mt-2" role="alert">Reset link sent — check your email.</div>
+                            <?php elseif ($reset_error !== ''): ?>
+                                <div class="alert alert-danger mt-2" role="alert"><?= htmlspecialchars($reset_error) ?></div>
+                            <?php endif; ?>
+
+                            <form method="POST" action="">
+                                <button type="submit" class="btn w-100 mt-2" name="send_reset" value="1" aria-label="reset password">Reset Password</button>
                             </form>
                             <!-- end if-editing -->
                             <?php endif; ?>
