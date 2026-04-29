@@ -17,22 +17,22 @@ DROP TABLE IF EXISTS users;
 
 --table creations
 CREATE TABLE IF NOT EXISTS budgets(
- id INTEGER PRIMARY KEY AUTOINCREMENT,
- group_id INTEGER NOT NULL,
+ id INTEGER(11) PRIMARY KEY AUTOINCREMENT,
+ group_id INTEGER(11) NOT NULL,
  FOREIGN KEY (group_id) REFERENCES groups(id),
  name          VARCHAR(100) NOT NULL,
  category        VARCHAR(100),
  amount_limit  DECIMAL(10,2),
  start_date             DATE,
  end_date               DATE,
- created_by          INTEGER,
+ created_by          INTEGER(11),
  FOREIGN KEY (created_by) REFERENCES users(id),
  created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE IF NOT EXISTS expenses
 (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  id INTEGER(11) PRIMARY KEY AUTOINCREMENT,
   group_id INTEGER(11) NOT NULL,
   FOREIGN KEY (group_id) REFERENCES groups(id),
   user_id INTEGER(11) NOT NULL,
@@ -48,7 +48,7 @@ CREATE TABLE IF NOT EXISTS expenses
 );
 
 CREATE TABLE IF NOT EXISTS expense_splits (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  id INTEGER(11) PRIMARY KEY AUTOINCREMENT,
   expense_id INTEGER(11) NOT NULL,
   FOREIGN KEY (expense_id) REFERENCES expenses(id),
   user_id INTEGER(11) NOT NULL,
@@ -59,7 +59,7 @@ CREATE TABLE IF NOT EXISTS expense_splits (
 );
 
 CREATE TABLE IF NOT EXISTS groups(
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  id INTEGER(11) PRIMARY KEY AUTOINCREMENT,
   name          VARCHAR(100) NOT NULL,
   password_hash VARCHAR(255) NOT NULL,
   owner_id       INTEGER(11) NOT NULL,
@@ -68,7 +68,7 @@ CREATE TABLE IF NOT EXISTS groups(
 );
 
 CREATE TABLE IF NOT EXISTS group_members(
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  id INTEGER(11) PRIMARY KEY AUTOINCREMENT,
   group_id INTEGER(11) NOT NULL,
   FOREIGN KEY (group_id) REFERENCES groups(id),
   user_id INTEGER(11) NOT NULL,
@@ -78,7 +78,7 @@ CREATE TABLE IF NOT EXISTS group_members(
 );
 
 CREATE TABLE IF NOT EXISTS messages(
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  id INTEGER(11) PRIMARY KEY AUTOINCREMENT,
   group_id INTEGER(11) NOT NULL,
   FOREIGN KEY (group_id) REFERENCES groups(id),
   user_id INTEGER(11) NOT NULL,
@@ -88,7 +88,7 @@ CREATE TABLE IF NOT EXISTS messages(
 );
 
 CREATE TABLE IF NOT EXISTS settlements(
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  id INTEGER(11) PRIMARY KEY AUTOINCREMENT,
   group_id INTEGER(11) NOT NULL,
   FOREIGN KEY (group_id) REFERENCES groups(id),
   payer_user_id INTEGER(11) NOT NULL,
@@ -98,12 +98,12 @@ CREATE TABLE IF NOT EXISTS settlements(
   amount           DECIMAL(10,2) NOT NULL,
   payment_date     DATE,
   note             VARCHAR(255),
-  created_by    INTEGER(11),
+  created_by       INTEGER(11),
   created_at       DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE IF NOT EXISTS users(
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  id INTEGER(11) PRIMARY KEY AUTOINCREMENT,
   name          VARCHAR(100) NOT NULL,
   email         VARCHAR(255) UNIQUE NOT NULL,
   password_hash VARCHAR(100) NOT NULL,
