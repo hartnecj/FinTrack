@@ -99,6 +99,7 @@ CREATE TABLE IF NOT EXISTS settlements(
   payment_date     DATE,
   note             VARCHAR(255),
   created_by       INTEGER(11),
+  FOREIGN KEY (created_by) REFERENCES users(id),
   created_at       DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
