@@ -96,7 +96,7 @@ CREATE TABLE IF NOT EXISTS settlements(
   payee_user_id INTEGER(11) NOT NULL,
   FOREIGN KEY (payee_user_id) REFERENCES users(id),
   amount           DECIMAL(10,2) NOT NULL,
-  payment_date     DATE,,
+  payment_date     DATE,
   note             VARCHAR(255),
   created_by    INTEGER(11),
   created_at       DATETIME DEFAULT CURRENT_TIMESTAMP
